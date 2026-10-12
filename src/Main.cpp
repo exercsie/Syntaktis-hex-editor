@@ -1,12 +1,14 @@
 #include "../Dependencies/imgui/imgui.h"
 #include "../Dependencies/imgui/backends/imgui_impl_glfw.h"
 #include "../Dependencies/imgui/backends/imgui_impl_opengl3.h"
+#include "MenuBar.hpp"
 
 #include <format>           // std::format
 #include <GLFW/glfw3.h>     // gl apis
 #include <string>           // std::string
 
 int main() {
+    MenuBar mb;
     glfwInit();
 
     // Start maximised 
@@ -45,6 +47,8 @@ int main() {
         ImVec2 displaySize = ImGui::GetIO().DisplaySize;
 
         const ImGuiViewport* viewPort = ImGui::GetMainViewport();
+
+        mb.menuBarView(window);
 
         /*ImGui::SetNextWindowPos(viewPort->WorkPos, ImGuiCond_Always);
         ImGui::SetNextWindowSize(viewPort->WorkSize, ImGuiCond_Always);

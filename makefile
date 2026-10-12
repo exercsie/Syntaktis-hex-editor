@@ -6,7 +6,8 @@ GUI_FLAGS = -I${IMGUI} -I${IMGUI}/backends
 MYGUI_FILES = \
 	src/Main.cpp \
 	src/Gui.cpp \
-	src/ByteLogic.cpp
+	src/ByteLogic.cpp \
+	src/MenuBar.cpp
 
 IMGUI_FILES = \
 	$(IMGUI)/imgui.cpp \
