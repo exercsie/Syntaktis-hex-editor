@@ -2,6 +2,7 @@
 #include "../Dependencies/imgui/backends/imgui_impl_glfw.h"
 #include "../Dependencies/imgui/backends/imgui_impl_opengl3.h"
 #include "MenuBar.hpp"
+#include "Gui.hpp"
 
 #include <format>           // std::format
 #include <GLFW/glfw3.h>     // gl apis
@@ -9,6 +10,7 @@
 
 int main() {
     MenuBar mb;
+    Gui g;
     glfwInit();
 
     // Start maximised 
@@ -23,7 +25,7 @@ int main() {
     ImGuiIO& io = ImGui::GetIO();
 
     // Load custom fonts
-    //ImFont* notoSansFont = g.staticFontLoader(NotoSans_Regular_ttf, NotoSans_Regular_ttf_len, 25.0f);
+    ImFont* notoSansFont = g.staticFontLoader(NotoSans_Regular_ttf, NotoSans_Regular_ttf_len, 25.0f);
     //ImFont* newFont = g.staticFontLoader(NewFont_Regular_ttf, NewFont_Regular_ttf_len, x.yf);
 
     // default ImGui font
@@ -32,7 +34,7 @@ int main() {
     ImFont* defaultImGuiFont = io.Fonts->AddFontDefault(&cfg);
 
     // Set default font
-    io.FontDefault = defaultImGuiFont;
+    io.FontDefault = notoSansFont;
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 130");

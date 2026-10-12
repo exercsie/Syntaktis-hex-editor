@@ -13,13 +13,19 @@ void MenuBar::menuBarView(GLFWwindow* win) {
 void MenuBar::menuBarDialog() {
     if(ImGui::BeginMainMenuBar()) {
         if(ImGui::BeginMenu("File")) {
-            if(ImGui::MenuItem("Open file")) {
+            if(ImGui::MenuItem("New Text File")) {
+                mbd.isReqToCreateNewTextFile = true;
+            }
+
+            ImGui::Separator();
+
+            if(ImGui::MenuItem("Open File")) {
                 mbd.isReqToOpenFile = true;
             }
 
             ImGui::Separator();
 
-            if(ImGui::MenuItem("Save file")) {
+            if(ImGui::MenuItem("Save File")) {
                 mbd.isReqToSaveFile = true;
             }
 
@@ -30,7 +36,6 @@ void MenuBar::menuBarDialog() {
             }
 
             ImGui::EndMenu();
-            
         }
 
         ImGui::EndMainMenuBar();
@@ -38,6 +43,10 @@ void MenuBar::menuBarDialog() {
 }
 
 void MenuBar::menuLogic(GLFWwindow* win) {
+    if(mbd.isReqToCreateNewTextFile) {
+        createTextFile();
+    }
+
     if(mbd.isReqToOpenFile) {
         openFile();
     }
@@ -50,6 +59,11 @@ void MenuBar::menuLogic(GLFWwindow* win) {
         quit(win);
     }
 
+}
+
+void MenuBar::createTextFile() {
+    ImGui::Text("*Creates text file*");
+    mbd.isReqToCreateNewTextFile = false;
 }
 
 void MenuBar::openFile() {
