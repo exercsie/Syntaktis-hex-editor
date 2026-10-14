@@ -3,7 +3,12 @@
 #include "../Dependencies/imgui/backends/imgui_impl_opengl3.h"
 #include "MenuBar.hpp"
 
+#include <filesystem>           // std::filesystem
+#include <fstream>              // std::ofstream
 #include <GLFW/glfw3.h>
+
+
+#include <iostream>
 
 void MenuBar::menuBarView(GLFWwindow* win) {
     menuBarDialog();
@@ -44,7 +49,27 @@ void MenuBar::menuBarDialog() {
 
 void MenuBar::menuLogic(GLFWwindow* win) {
     if(mbd.isReqToCreateNewTextFile) {
-        createTextFile();
+        ImGui::OpenPopup("Enter textfile name");
+        mbd.isReqToCreateNewTextFile = false;
+    }
+
+    if(ImGui::BeginPopupModal("Enter textfile name", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+        const bool enter = ImGui::InputText("##", cfd.createTextFileName, sizeof(cfd.createTextFileName), ImGuiInputTextFlags_EnterReturnsTrue);
+
+        if(ImGui::Button("Ok") || enter) {
+            createTextFile();
+            cfd.createTextFileName[0] = '\0'; // reset stale val
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::SameLine();
+        if(ImGui::Button("Cancel")) {
+            cfd.createTextFileName[0] = '\0';
+            ImGui::CloseCurrentPopup();
+        }
+
+
+        ImGui::EndPopup();
     }
 
     if(mbd.isReqToOpenFile) {
@@ -58,22 +83,31 @@ void MenuBar::menuLogic(GLFWwindow* win) {
     if(mbd.isReqToCloseProgram) {
         quit(win);
     }
-
 }
 
 void MenuBar::createTextFile() {
-    ImGui::Text("*Creates text file*");
-    mbd.isReqToCreateNewTextFile = false;
+    std::filesystem::create_directories(cfd.syntaktisHexEditorDirectory);
+
+    std::filesystem::path fileName(cfd.createTextFileName);
+    fileName = fileName.filename();
+    
+    if(fileName.extension() != ".txt") {
+        fileName += ".txt";
+    }
+
+    std::ofstream createdTextFile(cfd.syntaktisHexEditorDirectory / fileName);
+    if(createdTextFile.is_open()) {
+        std::cout << "OPEN!\n";
+    }
+
 }
 
 void MenuBar::openFile() {
     ImGui::Text("*Opens file*");
-    mbd.isReqToOpenFile = false;
 }
 
 void MenuBar::saveFile() {
     ImGui::Text("*Saves File*");
-    mbd.isReqToSaveFile = false;
 }
 
 void MenuBar::quit(GLFWwindow* win) {
