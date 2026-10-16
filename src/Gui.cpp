@@ -9,25 +9,7 @@ void Gui::MenuView(GLFWwindow* win) {
         if(ImGui::BeginMenu("File")) {
             if(ImGui::MenuItem("New Text File")) {
                 openCreateTextFilePopup = true;
-
-                if(ImGui::BeginPopupModal("Enter textfile name", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-                    const bool enter = ImGui::InputText("##", f.cfd.createTextFileName, sizeof(f.cfd.createTextFileName), ImGuiInputTextFlags_EnterReturnsTrue);
-
-                    if(ImGui::Button("Ok") || enter) {
-                        f.createTextFile();
-                        f.cfd.createTextFileName[0] = '\0'; // reset stale val
-                        ImGui::CloseCurrentPopup();
-                    }
-
-                    ImGui::SameLine();
-                    if(ImGui::Button("Cancel")) {
-                        f.cfd.createTextFileName[0] = '\0';
-                        ImGui::CloseCurrentPopup();
-                    }
-
-
-                    ImGui::EndPopup();
-                }
+                f.createTextFile();
             }
 
             ImGui::Separator();
@@ -54,29 +36,7 @@ void Gui::MenuView(GLFWwindow* win) {
         ImGui::EndMainMenuBar();
     }
 
-    if(openCreateTextFilePopup) {
-        ImGui::OpenPopup("Enter textfile name");
-        openCreateTextFilePopup = false;
-    }
-
-    if(ImGui::BeginPopupModal("Enter textfile name", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-        const bool enter = ImGui::InputText("##", f.cfd.createTextFileName, sizeof(f.cfd.createTextFileName), ImGuiInputTextFlags_EnterReturnsTrue);
-
-        if(ImGui::Button("Ok") || enter) {
-            f.createTextFile();
-            f.cfd.createTextFileName[0] = '\0'; // reset stale val
-            ImGui::CloseCurrentPopup();
-        }
-
-        ImGui::SameLine();
-        if(ImGui::Button("Cancel")) {
-            f.cfd.createTextFileName[0] = '\0';
-            ImGui::CloseCurrentPopup();
-        }
-
-
-        ImGui::EndPopup();
-    }
+    displayCreateTextFilePopup();
 }
 
 void Gui::InitialScreenView(ImVec2& displaySize, GLFWwindow* win) {
@@ -105,14 +65,51 @@ void Gui::FileEditorView(ImVec2& displaySize) {
         return;
     }
 
+    const float halfSize = displaySize.x / 2;
+    const float height = displaySize.y - 30.0f; // just below menu bar
+
     ImGui::SetNextWindowPos(ImVec2(0.0f, 30.0f), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(displaySize.x, displaySize.y - 30.0f), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(displaySize.x, height), ImGuiCond_Always);
     ImGui::SetNextWindowBgAlpha(1.0f); // Completely cover prior view
-    ImGui::Begin("Edit file", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
-    
-    ImGui::Text(std::format("{}", f.ofd.openedFilePath).c_str());
+    ImGui::Begin("Edit File", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+
+    ImGui::SetCursorPos(ImVec2(0.0f, 0.0f));
+    ImGui::BeginChild("Hex Editor", ImVec2(halfSize + 300.0f, height), ImGuiChildFlags_Borders);
+    ImGui::Text("HEX EDIT!");
+    ImGui::EndChild();
+
+    ImGui::SetCursorPos(ImVec2(halfSize + 300, 0.0f));
+    ImGui::BeginChild("Char Editor", ImVec2(halfSize, height), ImGuiChildFlags_Borders);
+    ImGui::Text("Char EDIT!");
+    ImGui::EndChild();
 
     ImGui::End();
+}
+
+void Gui::displayCreateTextFilePopup() {
+    if(openCreateTextFilePopup) {
+        ImGui::OpenPopup("Enter textfile name");
+        openCreateTextFilePopup = false;
+    }
+
+    if(ImGui::BeginPopupModal("Enter textfile name", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+        const bool enter = ImGui::InputText("##", f.cfd.createTextFileName, sizeof(f.cfd.createTextFileName), ImGuiInputTextFlags_EnterReturnsTrue);
+
+        if(ImGui::Button("Ok") || enter) {
+            f.createTextFile();
+            f.cfd.createTextFileName[0] = '\0'; // reset stale val
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::SameLine();
+        if(ImGui::Button("Cancel")) {
+            f.cfd.createTextFileName[0] = '\0';
+            ImGui::CloseCurrentPopup();
+        }
+
+
+        ImGui::EndPopup();
+    }
 }
 
 bool Gui::buttonColour(const char* name, ImVec4 v, ImVec2 size) {

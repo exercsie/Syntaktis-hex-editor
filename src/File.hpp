@@ -6,6 +6,7 @@
 
 class File {
 public:
+    // Menu options
     void createTextFile();
     void openFile();
     void openFileSelector();
@@ -16,12 +17,11 @@ public:
         std::string fileContents;
     };
     
-    OpenedFileData ofd;
     struct CreateFileData {
         char createTextFileName[16] = {};
         const std::filesystem::path syntaktisHexEditorDirectory = std::filesystem::path(std::getenv("HOME")) / "Syntaktis-Hex-Editor/Created-Text-Files";
     };
     
-
+    OpenedFileData ofd;
     CreateFileData cfd;
 };

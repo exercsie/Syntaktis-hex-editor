@@ -4,7 +4,7 @@
 #include "../Assets/Fonts/NotoSans.hpp"
 #include "Gui.hpp"
 
-#include <GLFW/glfw3.h>     // gl apis
+#include <GLFW/glfw3.h>         // gl apis
 
 int main() {
     Gui g;
