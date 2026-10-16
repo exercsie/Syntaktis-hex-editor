@@ -87,7 +87,6 @@ void MenuBar::menuLogic(GLFWwindow* win) {
 
 void MenuBar::createTextFile() {
     std::filesystem::create_directories(cfd.syntaktisHexEditorDirectory);
-
     std::filesystem::path fileName(cfd.createTextFileName);
     fileName = fileName.filename();
     
@@ -97,9 +96,11 @@ void MenuBar::createTextFile() {
 
     std::ofstream createdTextFile(cfd.syntaktisHexEditorDirectory / fileName);
     if(createdTextFile.is_open()) {
-        std::cout << "OPEN!\n";
+        std::cout << fileName << " Created at " << cfd.syntaktisHexEditorDirectory << std::endl;
+        // Ask user to save changes to prev file if changes are made
+        // close current file
+        // then open file, openFile();
     }
-
 }
 
 void MenuBar::openFile() {

@@ -11,6 +11,7 @@ public:
     ~MenuBar() = default;
 
     void menuBarView(GLFWwindow*);
+    void requestNewTextFile() { mbd.isReqToCreateNewTextFile = true; }
     
 private:
     void menuBarDialog();

@@ -50,7 +50,8 @@ int main() {
 
         const ImGuiViewport* viewPort = ImGui::GetMainViewport();
 
-        mb.menuBarView(window);
+        g.menuBarView(window);
+        g.initialScreen(displaySize, window);
 
         /*ImGui::SetNextWindowPos(viewPort->WorkPos, ImGuiCond_Always);
         ImGui::SetNextWindowSize(viewPort->WorkSize, ImGuiCond_Always);
