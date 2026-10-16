@@ -7,7 +7,7 @@ MYGUI_FILES = \
 	src/Main.cpp \
 	src/Gui.cpp \
 	src/ByteLogic.cpp \
-	src/MenuBar.cpp
+	src/GuiLogic.cpp
 
 IMGUI_FILES = \
 	$(IMGUI)/imgui.cpp \

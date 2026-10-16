@@ -5,7 +5,7 @@
 
 #include <GLFW/glfw3.h>
 
-void Gui::initialScreen(ImVec2& displaySize, GLFWwindow* win) {
+void Gui::initialScreenView(ImVec2& displaySize, GLFWwindow* win) {
     ImGui::SetNextWindowPos(ImVec2(0.0f, 30.0f), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(displaySize.x, displaySize.y), ImGuiCond_Always);
     ImGui::Begin("Starter Screen", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
@@ -15,12 +15,12 @@ void Gui::initialScreen(ImVec2& displaySize, GLFWwindow* win) {
 
     ImGui::SetCursorPos(ImVec2(displaySize.x * 0.5f - 225.0f, displaySize.y * 0.5f - 25.0f));
     if(buttonColour("New Text File", ImVec4(0.0f, 0.502f, 0.502f, 1.0f), ImVec2(200, 50))) {
-        mb.requestNewTextFile();
+        gl.requestNewTextFile();
     }
 
     ImGui::SetCursorPos(ImVec2(displaySize.x * 0.5f + 25.0f, displaySize.y * 0.5f - 25.0f));
     if(buttonColour("Open Text File", ImVec4(0.0f, 0.502f, 0.502f, 1.0f), ImVec2(200, 50))) {
-
+        gl.requestToOpenFile();
     }
 
     ImGui::End();

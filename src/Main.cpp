@@ -1,7 +1,6 @@
 #include "../Dependencies/imgui/imgui.h"
 #include "../Dependencies/imgui/backends/imgui_impl_glfw.h"
 #include "../Dependencies/imgui/backends/imgui_impl_opengl3.h"
-#include "MenuBar.hpp"
 #include "Gui.hpp"
 
 #include <format>           // std::format
@@ -9,7 +8,6 @@
 #include <string>           // std::string
 
 int main() {
-    MenuBar mb;
     Gui g;
     glfwInit();
 
@@ -51,7 +49,8 @@ int main() {
         const ImGuiViewport* viewPort = ImGui::GetMainViewport();
 
         g.menuBarView(window);
-        g.initialScreen(displaySize, window);
+        g.initialScreenView(displaySize, window);
+        g.fileEditorView(displaySize);
 
         /*ImGui::SetNextWindowPos(viewPort->WorkPos, ImGuiCond_Always);
         ImGui::SetNextWindowSize(viewPort->WorkSize, ImGuiCond_Always);
