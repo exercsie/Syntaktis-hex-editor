@@ -1,20 +1,22 @@
 #pragma once
 
-#include "../Assets/Fonts/NotoSans.hpp"
-#include "GuiLogic.hpp"
+#include "../Dependencies/imgui/imgui.h"
+#include "File.hpp"
 
 #include <cstdint>          // std::uint8_t, std::uint32_t
+#include <GLFW/glfw3.h>     
 
 class Gui {
 public:
     Gui() = default;
     ~Gui() = default;
 
-    void initialScreenView(ImVec2& displaySize, GLFWwindow* win);
-    void menuBarView(GLFWwindow* win) { gl.menuBarView(win); }
-    void fileEditorView(ImVec2& displaySize) { gl.fileEditorView(displaySize); };
+    void MenuView(GLFWwindow*);
+    void InitialScreenView(ImVec2& displaySize, GLFWwindow* win);
+    void FileEditorView(ImVec2& displaySize);
     bool buttonColour(const char* name, ImVec4 v, ImVec2 size = ImVec2(100, 0));
     [[nodiscard]] ImFont* staticFontLoader(std::uint8_t* fontData, const std::uint32_t fontLength, float size = 20.0f);
 private:
-    GuiLogic gl;
+    bool openCreateTextFilePopup = false;
+    File f;
 };

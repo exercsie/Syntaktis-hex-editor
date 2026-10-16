@@ -1,11 +1,10 @@
 #include "../Dependencies/imgui/imgui.h"
 #include "../Dependencies/imgui/backends/imgui_impl_glfw.h"
 #include "../Dependencies/imgui/backends/imgui_impl_opengl3.h"
+#include "../Assets/Fonts/NotoSans.hpp"
 #include "Gui.hpp"
 
-#include <format>           // std::format
 #include <GLFW/glfw3.h>     // gl apis
-#include <string>           // std::string
 
 int main() {
     Gui g;
@@ -48,9 +47,9 @@ int main() {
 
         const ImGuiViewport* viewPort = ImGui::GetMainViewport();
 
-        g.menuBarView(window);
-        g.initialScreenView(displaySize, window);
-        g.fileEditorView(displaySize);
+        g.MenuView(window);
+        g.InitialScreenView(displaySize, window);
+        g.FileEditorView(displaySize);
 
         /*ImGui::SetNextWindowPos(viewPort->WorkPos, ImGuiCond_Always);
         ImGui::SetNextWindowSize(viewPort->WorkSize, ImGuiCond_Always);

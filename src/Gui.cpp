@@ -1,11 +1,85 @@
 #include "../Dependencies/imgui/imgui.h"
-#include "../Dependencies/imgui/backends/imgui_impl_glfw.h"
-#include "../Dependencies/imgui/backends/imgui_impl_opengl3.h"
 #include "Gui.hpp"
 
-#include <GLFW/glfw3.h>
+#include <format>               // std::format
+#include <GLFW/glfw3.h>         // gl apis
 
-void Gui::initialScreenView(ImVec2& displaySize, GLFWwindow* win) {
+void Gui::MenuView(GLFWwindow* win) {
+    if(ImGui::BeginMainMenuBar()) {
+        if(ImGui::BeginMenu("File")) {
+            if(ImGui::MenuItem("New Text File")) {
+                openCreateTextFilePopup = true;
+
+                if(ImGui::BeginPopupModal("Enter textfile name", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+                    const bool enter = ImGui::InputText("##", f.cfd.createTextFileName, sizeof(f.cfd.createTextFileName), ImGuiInputTextFlags_EnterReturnsTrue);
+
+                    if(ImGui::Button("Ok") || enter) {
+                        f.createTextFile();
+                        f.cfd.createTextFileName[0] = '\0'; // reset stale val
+                        ImGui::CloseCurrentPopup();
+                    }
+
+                    ImGui::SameLine();
+                    if(ImGui::Button("Cancel")) {
+                        f.cfd.createTextFileName[0] = '\0';
+                        ImGui::CloseCurrentPopup();
+                    }
+
+
+                    ImGui::EndPopup();
+                }
+            }
+
+            ImGui::Separator();
+
+            if(ImGui::MenuItem("Open File")) {
+                f.openFileSelector();
+            }
+
+            ImGui::Separator();
+
+            if(ImGui::MenuItem("Save File")) {
+                f.saveFile();
+            }
+
+            ImGui::Separator();
+
+            if(ImGui::MenuItem("Quit")) {
+                glfwSetWindowShouldClose(win, true);
+            }
+
+            ImGui::EndMenu();
+        }
+
+        ImGui::EndMainMenuBar();
+    }
+
+    if(openCreateTextFilePopup) {
+        ImGui::OpenPopup("Enter textfile name");
+        openCreateTextFilePopup = false;
+    }
+
+    if(ImGui::BeginPopupModal("Enter textfile name", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+        const bool enter = ImGui::InputText("##", f.cfd.createTextFileName, sizeof(f.cfd.createTextFileName), ImGuiInputTextFlags_EnterReturnsTrue);
+
+        if(ImGui::Button("Ok") || enter) {
+            f.createTextFile();
+            f.cfd.createTextFileName[0] = '\0'; // reset stale val
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::SameLine();
+        if(ImGui::Button("Cancel")) {
+            f.cfd.createTextFileName[0] = '\0';
+            ImGui::CloseCurrentPopup();
+        }
+
+
+        ImGui::EndPopup();
+    }
+}
+
+void Gui::InitialScreenView(ImVec2& displaySize, GLFWwindow* win) {
     ImGui::SetNextWindowPos(ImVec2(0.0f, 30.0f), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(displaySize.x, displaySize.y), ImGuiCond_Always);
     ImGui::Begin("Starter Screen", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
@@ -15,16 +89,31 @@ void Gui::initialScreenView(ImVec2& displaySize, GLFWwindow* win) {
 
     ImGui::SetCursorPos(ImVec2(displaySize.x * 0.5f - 225.0f, displaySize.y * 0.5f - 25.0f));
     if(buttonColour("New Text File", ImVec4(0.0f, 0.502f, 0.502f, 1.0f), ImVec2(200, 50))) {
-        gl.requestNewTextFile();
+        openCreateTextFilePopup = true;
     }
 
     ImGui::SetCursorPos(ImVec2(displaySize.x * 0.5f + 25.0f, displaySize.y * 0.5f - 25.0f));
     if(buttonColour("Open Text File", ImVec4(0.0f, 0.502f, 0.502f, 1.0f), ImVec2(200, 50))) {
-        gl.requestToOpenFile();
+        f.openFileSelector();
     }
 
     ImGui::End();
 }   
+
+void Gui::FileEditorView(ImVec2& displaySize) {
+    if(f.ofd.openedFilePath.empty()) {
+        return;
+    }
+
+    ImGui::SetNextWindowPos(ImVec2(0.0f, 30.0f), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(displaySize.x, displaySize.y - 30.0f), ImGuiCond_Always);
+    ImGui::SetNextWindowBgAlpha(1.0f); // Completely cover prior view
+    ImGui::Begin("Edit file", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+    
+    ImGui::Text(std::format("{}", f.ofd.openedFilePath).c_str());
+
+    ImGui::End();
+}
 
 bool Gui::buttonColour(const char* name, ImVec4 v, ImVec2 size) {
     ImGui::PushStyleColor(ImGuiCol_Button, v);
