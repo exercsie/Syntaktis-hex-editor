@@ -8,19 +8,19 @@
 
 class Gui {
 public:
-    Gui() = default;
-    ~Gui() = default;
+    explicit Gui();
+    explicit Gui(File& file) : f(file) {}
+    ~Gui() = default; 
 
     // Views
-    void MenuView(GLFWwindow*);
+    void MenuBarView(GLFWwindow*);
     void InitialScreenView(ImVec2& displaySize, GLFWwindow* win);
-    void FileEditorView(ImVec2& displaySize);
-    
+
     // General UI
     void displayCreateTextFilePopup();
     bool buttonColour(const char* name, ImVec4 v, ImVec2 size = ImVec2(100, 0));
     [[nodiscard]] ImFont* staticFontLoader(std::uint8_t* fontData, const std::uint32_t fontLength, float size = 20.0f);
 private:
     bool openCreateTextFilePopup = false;
-    File f;
+    File& f;
 };

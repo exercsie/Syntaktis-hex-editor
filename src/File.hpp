@@ -18,7 +18,7 @@ public:
     };
     
     struct CreateFileData {
-        char createTextFileName[16] = {};
+        char createTextFileName[16]{};
         const std::filesystem::path syntaktisHexEditorDirectory = std::filesystem::path(std::getenv("HOME")) / "Syntaktis-Hex-Editor/Created-Text-Files";
     };
     

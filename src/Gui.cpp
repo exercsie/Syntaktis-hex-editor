@@ -4,12 +4,13 @@
 #include <format>               // std::format
 #include <GLFW/glfw3.h>         // gl apis
 
-void Gui::MenuView(GLFWwindow* win) {
+#include <iostream>
+
+void Gui::MenuBarView(GLFWwindow* win) {
     if(ImGui::BeginMainMenuBar()) {
         if(ImGui::BeginMenu("File")) {
             if(ImGui::MenuItem("New Text File")) {
                 openCreateTextFilePopup = true;
-                f.createTextFile();
             }
 
             ImGui::Separator();
@@ -58,32 +59,6 @@ void Gui::InitialScreenView(ImVec2& displaySize, GLFWwindow* win) {
     }
 
     ImGui::End();
-}   
-
-void Gui::FileEditorView(ImVec2& displaySize) {
-    if(f.ofd.openedFilePath.empty()) {
-        return;
-    }
-
-    const float halfSize = displaySize.x / 2;
-    const float height = displaySize.y - 30.0f; // just below menu bar
-
-    ImGui::SetNextWindowPos(ImVec2(0.0f, 30.0f), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(displaySize.x, height), ImGuiCond_Always);
-    ImGui::SetNextWindowBgAlpha(1.0f); // Completely cover prior view
-    ImGui::Begin("Edit File", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
-
-    ImGui::SetCursorPos(ImVec2(0.0f, 0.0f));
-    ImGui::BeginChild("Hex Editor", ImVec2(halfSize + 300.0f, height), ImGuiChildFlags_Borders);
-    ImGui::Text("HEX EDIT!");
-    ImGui::EndChild();
-
-    ImGui::SetCursorPos(ImVec2(halfSize + 300, 0.0f));
-    ImGui::BeginChild("Char Editor", ImVec2(halfSize, height), ImGuiChildFlags_Borders);
-    ImGui::Text("Char EDIT!");
-    ImGui::EndChild();
-
-    ImGui::End();
 }
 
 void Gui::displayCreateTextFilePopup() {
@@ -106,7 +81,6 @@ void Gui::displayCreateTextFilePopup() {
             f.cfd.createTextFileName[0] = '\0';
             ImGui::CloseCurrentPopup();
         }
-
 
         ImGui::EndPopup();
     }

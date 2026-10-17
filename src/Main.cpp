@@ -3,11 +3,14 @@
 #include "../Dependencies/imgui/backends/imgui_impl_opengl3.h"
 #include "../Assets/Fonts/NotoSans.hpp"
 #include "Gui.hpp"
+#include "FileEditorView.hpp"
 
 #include <GLFW/glfw3.h>         // gl apis
 
 int main() {
-    Gui g;
+    File f;
+    Gui g(f);
+    FileEditorView fev(f);
     glfwInit();
 
     // Start maximised 
@@ -47,9 +50,9 @@ int main() {
 
         const ImGuiViewport* viewPort = ImGui::GetMainViewport();
 
-        g.MenuView(window);
+        g.MenuBarView(window);
         g.InitialScreenView(displaySize, window);
-        g.FileEditorView(displaySize);
+        fev.FileMainView(displaySize);
 
         /*ImGui::SetNextWindowPos(viewPort->WorkPos, ImGuiCond_Always);
         ImGui::SetNextWindowSize(viewPort->WorkSize, ImGuiCond_Always);

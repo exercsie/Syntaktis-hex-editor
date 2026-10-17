@@ -48,6 +48,8 @@ void File::openFile() {
         return;
     }
 
+    std::cout << "OPENING path " << ofd.openedFilePath << std::endl;
+
     if(!ofd.fileContents.empty()) {
         std::cout << "recevied vals\n";
     }
