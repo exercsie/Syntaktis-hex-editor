@@ -4,3 +4,9 @@
 [submodule "Dependencies/portable-file-dialogs"]
 	path = Dependencies/portable-file-dialogs
 	url = https://github.com/samhocevar/portable-file-dialogs.git
+[submodule "Dependencies/Dependencies/cppcodec"]
+	path = Dependencies/Dependencies/cppcodec
+	url = https://github.com/tplgy/cppcodec.git
+[submodule "Dependencies/cppcodec"]
+	path = Dependencies/cppcodec
+	url = https://github.com/tplgy/cppcodec.git

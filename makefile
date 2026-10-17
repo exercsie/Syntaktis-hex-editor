@@ -1,8 +1,8 @@
 IMGUI = Dependencies/imgui
+CPPCODEC = Dependencies/cppcodec
 
-GUI_FLAGS = -I${IMGUI} -I${IMGUI}/backends
+GUI_FLAGS = -I${IMGUI} -I${IMGUI}/backends -I${CPPCODEC}
 
-# GUI version
 MYGUI_FILES = \
 	src/Main.cpp \
 	src/Gui.cpp \
@@ -16,7 +16,8 @@ IMGUI_FILES = \
 	$(IMGUI)/imgui_tables.cpp \
 	$(IMGUI)/imgui_widgets.cpp \
 	$(IMGUI)/backends/imgui_impl_glfw.cpp \
-	$(IMGUI)/backends/imgui_impl_opengl3.cpp
+	$(IMGUI)/backends/imgui_impl_opengl3.cpp \
+	${IMGUI}/misc/cpp/imgui_stdlib.cpp
 
 GUI_SUFFIX_FLAGS = -lglfw -lGL -ldl -std=c++23
 
