@@ -16,7 +16,7 @@ int main() {
     // Start maximised 
     //glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
-    GLFWwindow* window = glfwCreateWindow(950, 1000, "Syntaktis Hex Editor", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(960, 540, "Syntaktis Hex Editor", nullptr, nullptr);
 
     glfwMakeContextCurrent(window);
 
@@ -50,7 +50,7 @@ int main() {
 
         const ImGuiViewport* viewPort = ImGui::GetMainViewport();
 
-        g.MenuBarView(window);
+        g.MenuBarView(window, displaySize);
         g.InitialScreenView(displaySize, window);
         fev.FileMainView(displaySize);
 

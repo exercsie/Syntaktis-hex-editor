@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-void Gui::MenuBarView(GLFWwindow* win) {
+void Gui::MenuBarView(GLFWwindow* win, ImVec2& displaySize) {
     if(ImGui::BeginMainMenuBar()) {
         if(ImGui::BeginMenu("File")) {
             if(ImGui::MenuItem("New Text File")) {
@@ -22,7 +22,10 @@ void Gui::MenuBarView(GLFWwindow* win) {
             ImGui::Separator();
 
             if(ImGui::MenuItem("Save File")) {
-                f.saveFile();
+                const auto r = f.saveFile();
+                if(r) {
+                    std::cout << r.value() << std::endl;
+                }
             }
 
             ImGui::Separator();
@@ -33,6 +36,10 @@ void Gui::MenuBarView(GLFWwindow* win) {
 
             ImGui::EndMenu();
         }
+
+        // display path ton top bar
+        ImGui::SetCursorPosX((displaySize.x / 2) - 300.0f);
+        ImGui::Text(std::format("{}", f.ofd.openedFilePath).c_str());
 
         ImGui::EndMainMenuBar();
     }
@@ -71,8 +78,21 @@ void Gui::displayCreateTextFilePopup() {
         const bool enter = ImGui::InputText("##", f.cfd.createTextFileName, sizeof(f.cfd.createTextFileName), ImGuiInputTextFlags_EnterReturnsTrue);
 
         if(ImGui::Button("Ok") || enter) {
-            f.createTextFile();
-            f.cfd.createTextFileName[0] = '\0'; // reset stale val
+            const auto r = f.createTextFile();
+            if(r) {
+                f.cfd.createTextFileName[0] = '\0'; // reset stale val
+                std::cout << *r << std::endl;
+            } else {
+                std::cout << r.error() << std::endl;
+            }
+            
+
+            const auto of = f.openFile();
+            if(r) {
+                std::cout << *of << std::endl;
+            } else {
+                std::cout << of.error() << std::endl;
+            }
             ImGui::CloseCurrentPopup();
         }
 

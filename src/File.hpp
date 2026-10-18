@@ -1,16 +1,17 @@
 #pragma once
 
-#include <filesystem>           // std::filesystem
 #include <cstdlib>              // std::getenv
+#include <expected>             // std::expected, std::unexpected
+#include <filesystem>           // std::filesystem
 #include <string>               // std::string
 
 class File {
 public:
     // Menu options
-    void createTextFile();
-    void openFile();
+    std::expected<std::string, std::string> createTextFile();
+    std::expected<std::string, std::string> openFile();
     void openFileSelector();
-    void saveFile();
+    std::expected<std::string, std::string> saveFile();
     
     struct OpenedFileData {
         std::string openedFilePath;

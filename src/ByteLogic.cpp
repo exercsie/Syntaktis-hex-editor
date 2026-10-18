@@ -13,6 +13,7 @@ std::string Conversion::convertHexToChar(const std::string& input) {
         }
     }
 
+    // remove trailing odd byte to make a hex char
     if(temp.size() & 1) {
         temp.pop_back();
     }

@@ -5,12 +5,13 @@
 #include "File.hpp"
 
 #include <filesystem>           // std::filesystem
+#include <format>               // std::format
 #include <fstream>              // std::ofstream
 #include <iostream>             // std::cout, std::endl
 #include <string>               // std::string
 #include <vector>               // std::vector
 
-void File::createTextFile() {
+std::expected<std::string, std::string> File::createTextFile() {
     std::filesystem::create_directories(cfd.syntaktisHexEditorDirectory);
     std::filesystem::path fileName(cfd.createTextFileName);
     fileName = fileName.filename();
@@ -23,13 +24,24 @@ void File::createTextFile() {
 
     std::ofstream createdTextFile(fullPath);
     if(!createdTextFile.is_open()) {
-        std::cout << "file failed to open\n";
-        return;
+        return std::unexpected(std::format("Failed to open {}", fileName.string()));
     }
     
-    std::cout << fileName << " Created at " << cfd.syntaktisHexEditorDirectory << std::endl;
     ofd.openedFilePath = fullPath.string();
-    openFile();
+    return std::format("Created {}", fileName.string());
+}
+
+std::expected<std::string, std::string> File::openFile() {
+    std::ifstream file(ofd.openedFilePath);
+    if(!file.is_open()) {
+        return std::unexpected(std::format("Failed to open {}", ofd.openedFilePath));
+    }
+    
+    if(!ofd.fileContents.empty()) {
+        std::cout << "recevied vals\n";
+    }
+
+    return std::format("Opening path {}", ofd.openedFilePath);
 }
 
 void File::openFileSelector() {
@@ -37,24 +49,16 @@ void File::openFileSelector() {
 
     if(!chooseFile.empty()) {
         ofd.openedFilePath = chooseFile[0];
-        openFile();
+        const auto r = openFile();
+        if(r) {
+            std::cout << *r << std::endl;
+        } else {
+            std::cout << r.error() << std::endl;
+        }
     }
 }
 
-void File::openFile() {
-    std::ifstream file(ofd.openedFilePath);
-    if(!file.is_open()) {
-        std::cout << "failed to oepn file\n";
-        return;
-    }
-
-    std::cout << "OPENING path " << ofd.openedFilePath << std::endl;
-
-    if(!ofd.fileContents.empty()) {
-        std::cout << "recevied vals\n";
-    }
-}
-
-void File::saveFile() {
+std::expected<std::string, std::string> File::saveFile() {
     ImGui::Text("*Saves File*");
+    return std::format("{} file saved successfully", cfd.createTextFileName);
 }

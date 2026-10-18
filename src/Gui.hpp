@@ -13,12 +13,12 @@ public:
     ~Gui() = default; 
 
     // Views
-    void MenuBarView(GLFWwindow*);
+    void MenuBarView(GLFWwindow*, ImVec2&);
     void InitialScreenView(ImVec2& displaySize, GLFWwindow* win);
 
     // General UI
     void displayCreateTextFilePopup();
-    bool buttonColour(const char* name, ImVec4 v, ImVec2 size = ImVec2(100, 0));
+    [[nodiscard]] bool buttonColour(const char* name, ImVec4 v, ImVec2 size = ImVec2(100, 0));
     [[nodiscard]] ImFont* staticFontLoader(std::uint8_t* fontData, const std::uint32_t fontLength, float size = 20.0f);
 private:
     bool openCreateTextFilePopup = false;
