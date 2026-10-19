@@ -44,6 +44,7 @@ void FileEditorView::hexEditorView(const ImVec2& pos, const float hexEditorWidth
     ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
     if(ImGui::InputTextMultiline("##", &InputData.hex, ImVec2(-FLT_MIN, -FLT_MIN), ImGuiInputTextFlags_WordWrap)) {
         InputData.chars = c.convertHexToChar(InputData.hex);
+        f.ofd.fileContents = InputData.chars;
     }
 
     ImGui::PopStyleVar();
@@ -61,6 +62,7 @@ void FileEditorView::charEditorView(const ImVec2& pos, const float hexEditorWidt
     ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
     if(ImGui::InputTextMultiline("##", &InputData.chars, ImVec2(-FLT_MIN, -FLT_MIN), ImGuiInputTextFlags_WordWrap)) {
         InputData.hex = c.convertCharsToHex(InputData.chars);
+        f.ofd.fileContents = InputData.chars;
     }
 
     ImGui::PopStyleVar();

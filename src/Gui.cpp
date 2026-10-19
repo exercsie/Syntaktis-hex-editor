@@ -24,7 +24,9 @@ void Gui::MenuBarView(GLFWwindow* win, ImVec2& displaySize) {
             if(ImGui::MenuItem("Save File")) {
                 const auto r = f.saveFile();
                 if(r) {
-                    std::cout << r.value() << std::endl;
+                    std::cout << *r << std::endl;
+                } else {
+                    std::cout << r.error() << std::endl;
                 }
             }
 
@@ -85,7 +87,6 @@ void Gui::displayCreateTextFilePopup() {
             } else {
                 std::cout << r.error() << std::endl;
             }
-            
 
             const auto of = f.openFile();
             if(r) {

@@ -32,7 +32,7 @@ std::expected<std::string, std::string> File::createTextFile() {
 }
 
 std::expected<std::string, std::string> File::openFile() {
-    std::ifstream file(ofd.openedFilePath);
+    std::ifstream file(ofd.openedFilePath, std::ios::binary);
     if(!file.is_open()) {
         return std::unexpected(std::format("Failed to open {}", ofd.openedFilePath));
     }
@@ -59,6 +59,19 @@ void File::openFileSelector() {
 }
 
 std::expected<std::string, std::string> File::saveFile() {
-    ImGui::Text("*Saves File*");
-    return std::format("{} file saved successfully", cfd.createTextFileName);
+    if(ofd.openedFilePath.empty()) {
+        return std::unexpected("There is no file to save!");
+    }
+
+    std::ofstream file(ofd.openedFilePath, std::ios::binary | std::ios::trunc);
+    if(!file.is_open()) {
+        return std::unexpected(std::format("Failed to save {}", ofd.openedFilePath));
+    }
+
+    file.write(ofd.fileContents.data(), static_cast<std::streamsize>(ofd.fileContents.size()));
+    if(!file) {
+        return std::unexpected(std::format("Faile to write to {}", ofd.openedFilePath));
+    }
+
+    return std::format("File saved successfully at {}", ofd.openedFilePath);
 }
