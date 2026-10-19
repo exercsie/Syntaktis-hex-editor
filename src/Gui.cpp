@@ -102,6 +102,7 @@ void Gui::displayCreateTextFilePopup() {
             } else {
                 std::cout << of.error() << std::endl;
             }
+            
             ImGui::CloseCurrentPopup();
         }
 

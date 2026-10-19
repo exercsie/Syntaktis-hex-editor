@@ -92,6 +92,8 @@ std::expected<std::string, std::string> File::saveFile() {
         return std::unexpected(std::format("Faile to write to {}!", ofd.openedFilePath));
     }
 
+    ofd.originalContents = ofd.fileContents;
+
     return std::format("File saved successfully at {}", ofd.openedFilePath);
 }
 
