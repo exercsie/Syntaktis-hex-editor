@@ -13,7 +13,7 @@ void FileEditorView::FileMainView(ImVec2& displaySize) {
 
     // Heights
     const float menuBarHeight = 30.0f;
-    const float footerHeight = 50.0f;
+    const float footerHeight = 40.0f;
     const float windowWidth = displaySize.x;
     const float windowHeight = displaySize.y - menuBarHeight;
     const float editorHeight = windowHeight - footerHeight;
@@ -72,8 +72,9 @@ void FileEditorView::FooterView(const ImVec2& pos, const float footerHeight, con
     ImGui::SetCursorPos(pos);
     const float footerWidth = ImGui::GetWindowWidth();
     ImGui::BeginChild("Footer", ImVec2(footerWidth, footerHeight), ImGuiChildFlags_Borders);
-    
-    ImGui::Text(std::format("offset 0x").c_str());
+
+    std::size_t offset = InputData.chars.size();
+    ImGui::Text(std::format("0x{:X}", offset).c_str()); // https://www.modernescpp.com/index.php/std-format-in-c-20/
 
     ImGui::EndChild();
 }
