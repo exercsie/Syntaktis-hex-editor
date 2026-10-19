@@ -50,6 +50,8 @@ std::expected<std::string, std::string> File::openFile() {
         return std::unexpected(std::format("Failed to read {}!", ofd.openedFilePath));
     }
 
+    ofd.originalContents = ofd.fileContents;
+
     InputData.chars = ofd.fileContents;
     InputData.hex = Conversion::convertCharsToHex(InputData.chars);
     return std::format("Opened {}", ofd.openedFilePath);
@@ -59,6 +61,12 @@ void File::openFileSelector() {
     std::vector<std::string> chooseFile = pfd::open_file("Open File", cfd.syntaktisHexEditorDirectory.string(), {"Text Files", "*.txt", "All Files", "*" }).result();
 
     if(!chooseFile.empty()) {
+        if(ofd.fileContents != ofd.originalContents) {
+            tempFilePath = chooseFile[0];
+            unsavedChangesPopup = true;
+            return;
+        }
+
         ofd.openedFilePath = chooseFile[0];
         const auto r = openFile();
         if(r) {

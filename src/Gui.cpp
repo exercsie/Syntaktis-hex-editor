@@ -54,6 +54,7 @@ void Gui::MenuBarView(GLFWwindow* win, ImVec2& displaySize) {
     }
 
     displayCreateTextFilePopup();
+    displayUnsavedChangesPopup();
 }
 
 void Gui::InitialScreenView(ImVec2& displaySize, GLFWwindow* win) {
@@ -107,6 +108,57 @@ void Gui::displayCreateTextFilePopup() {
         ImGui::SameLine();
         if(ImGui::Button("Cancel")) {
             f.cfd.createTextFileName[0] = '\0';
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndPopup();
+    }
+}
+
+void Gui::displayUnsavedChangesPopup() {
+    if(f.unsavedChangesPopup) {
+        ImGui::OpenPopup("Unsaved Changes");
+        f.unsavedChangesPopup = false;
+    }
+
+    if(ImGui::BeginPopupModal("Unsaved Changes", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+        ImGui::Text("The file has not been saved");
+
+        if(buttonColour("Save", ImVec4(0.0f, 1.0f, 0.0f, 0.5f))) {
+            const auto r = f.saveFile();
+            if(r) {
+                std::cout << *r << std::endl;
+
+                f.ofd.openedFilePath = f.tempFilePath;
+                const auto opened = f.openFile();
+
+                if(!opened) {
+                    std::cout << opened.error() << std::endl;
+                }
+            } else {
+                std::cout << r.error() << std::endl;
+            }
+
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::SameLine();
+
+        if(buttonColour("Don't save", ImVec4(1.0f, 0.0f, 0.0f, 0.5f))) {
+            f.ofd.openedFilePath = f.tempFilePath;
+
+            const auto r = f.openFile();
+            if(!r) {
+                std::cout << r.error() << std::endl;
+            }
+
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::SameLine();
+
+        if(buttonColour("Cancel", ImVec4(0.5f, 0.5f, 0.5f, 0.5f))) {
+            f.tempFilePath.clear();
             ImGui::CloseCurrentPopup();
         }
 

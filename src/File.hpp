@@ -24,6 +24,7 @@ public:
     struct OpenedFileData {
         std::string openedFilePath;
         std::string fileContents;
+        std::string originalContents;
     };
     
     struct CreateFileData {
@@ -33,6 +34,8 @@ public:
     
     OpenedFileData ofd;
     CreateFileData cfd;
+    std::string tempFilePath;
+    bool unsavedChangesPopup = false;
 private:
     DynamicInputData& InputData;
 };
