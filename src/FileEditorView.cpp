@@ -74,7 +74,7 @@ void FileEditorView::FooterView(const ImVec2& pos, const float footerHeight, con
     ImGui::BeginChild("Footer", ImVec2(footerWidth, footerHeight), ImGuiChildFlags_Borders);
 
     std::size_t offset = InputData.chars.size();
-    ImGui::Text(std::format("0x{:X}", offset).c_str()); // https://www.modernescpp.com/index.php/std-format-in-c-20/
+    ImGui::Text(std::format("Offset: 0x{:X}", offset).c_str()); // https://www.modernescpp.com/index.php/std-format-in-c-20/
 
     ImGui::EndChild();
 }

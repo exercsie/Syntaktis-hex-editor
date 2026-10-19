@@ -22,5 +22,18 @@ std::string Conversion::convertHexToChar(const std::string& input) {
 }
 
 std::string Conversion::convertCharsToHex(const std::string& chars) {
-    return cppcodec::hex_upper::encode(chars);
+    std::string hex = cppcodec::hex_upper::encode(chars);
+    std::string output;
+
+    for(std::size_t i{}; i < hex.size(); i += 2) {
+        // Add space after every hexadecimal val
+        if(i > 0) {
+            output += ' ';
+        }
+
+        // app the next two hexa-decimal vals onto output
+        output += hex.substr(i, 2);
+    }
+
+    return output;
 }
