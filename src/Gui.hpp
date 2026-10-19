@@ -8,6 +8,7 @@
 
 class Gui {
 public:
+    // Constructor / Destructor
     explicit Gui();
     explicit Gui(File& file) : f(file) {}
     ~Gui() = default; 

@@ -7,10 +7,11 @@
 #include <filesystem>           // std::filesystem
 #include <string>               // std::string
 
-
 class File {
 public:
+    // Constructor / Destructor
     explicit File(DynamicInputData& DynamicInputData) : InputData(DynamicInputData) {}
+    ~File() = default;
 
     // Menu options
     std::expected<std::string, std::string> createTextFile();
@@ -18,6 +19,7 @@ public:
     void openFileSelector();
     std::expected<std::string, std::string> saveFile();
     
+    // Data
     struct OpenedFileData {
         std::string openedFilePath;
         std::string fileContents;

@@ -4,9 +4,11 @@
 
 class Conversion {
 public:
-    Conversion() = default;
+    // Constructor / Destructor
+    explicit Conversion() = default;
     ~Conversion() = default;
 
+    // Conversion Logic
     static std::string convertHexToChar(const std::string&);
     static std::string convertCharsToHex(const std::string&);
 };

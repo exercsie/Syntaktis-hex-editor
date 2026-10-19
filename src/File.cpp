@@ -3,11 +3,13 @@
 #include "../Dependencies/imgui/backends/imgui_impl_opengl3.h"
 #include "../Dependencies/portable-file-dialogs/portable-file-dialogs.h"
 #include "File.hpp"
+#include "ByteLogic.hpp"
 
 #include <filesystem>           // std::filesystem
 #include <format>               // std::format
 #include <fstream>              // std::ofstream
 #include <iostream>             // std::cout, std::endl
+#include <iterator>             // std::istreambuf_iterator
 #include <string>               // std::string
 #include <vector>               // std::vector
 
@@ -41,16 +43,16 @@ std::expected<std::string, std::string> File::openFile() {
         return std::unexpected(std::format("Failed to open {}", ofd.openedFilePath));
     }
     
-    if(!ofd.fileContents.empty()) {
-        std::cout << "recevied vals\n";
+    // read data until the end of the file and assign to std::string fileContents
+    ofd.fileContents.assign(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>()); //https://www.tutorialspoint.com/cpp_standard_library/cpp_iterator_istreambuf_iterator.htm
+
+    if(file.bad()) {
+        return std::unexpected(std::format("Failed to read {}", ofd.openedFilePath));
     }
 
-    // clear after opening new file 
-    InputData.chars.clear();
-    InputData.hex.clear();
-    ofd.fileContents.clear();
-
-    return std::format("Opening path {}", ofd.openedFilePath);
+    InputData.chars = ofd.fileContents;
+    InputData.hex = Conversion::convertCharsToHex(InputData.chars);
+    return std::format("Opened {}", ofd.openedFilePath);
 }
 
 void File::openFileSelector() {
