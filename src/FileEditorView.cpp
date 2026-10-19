@@ -4,30 +4,40 @@
 #include "Gui.hpp"
 #include "File.hpp"
 
+#include <format>           // std::format
+
 void FileEditorView::FileMainView(ImVec2& displaySize) {
     if(f.ofd.openedFilePath.empty()) {
         return;
     }
 
-    const float height = displaySize.y - 30.0f; // just below menu bar
-    const float hexWidth = displaySize.x / 2 + 300.0f;
-    const float charWidth = displaySize.x - hexWidth;
+    // Heights
+    const float menuBarHeight = 30.0f;
+    const float footerHeight = 50.0f;
+    const float windowWidth = displaySize.x;
+    const float windowHeight = displaySize.y - menuBarHeight;
+    const float editorHeight = windowHeight - footerHeight;
+
+    // widths
+    const float hexEditorWidth = windowWidth / 2.0f + 150.0f;
+    const float charEditorWidth = windowWidth - hexEditorWidth;
 
     ImGui::SetNextWindowPos(ImVec2(0.0f, 30.0f), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(displaySize.x, height), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight), ImGuiCond_Always);
     ImGui::SetNextWindowBgAlpha(1.0f); // Completely cover prior view
     ImGui::Begin("Edit File", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
 
-    hexEditorView(ImVec2(0.0f, 0.0f), hexWidth, height);
-    charEditorView(ImVec2(0.0f, 0.0f), hexWidth, charWidth, height);
+    hexEditorView(ImVec2(0.0f, 0.0f), hexEditorWidth, editorHeight);
+    charEditorView(ImVec2(hexEditorWidth, 0.0f), hexEditorWidth, charEditorWidth, editorHeight);
+    FooterView(ImVec2(0.0f, editorHeight), footerHeight, hexEditorWidth, charEditorWidth);
 
     ImGui::End();
 }
 
-void FileEditorView::hexEditorView(const ImVec2&, const float hexWidth, const float height) {
-    ImGui::SetCursorPos(ImVec2(0.0f, 0.0f));
-    ImGui::BeginChild("Hex Editor", ImVec2(hexWidth, height), ImGuiChildFlags_Borders);
-    ImGui::Text("HEX EDIT!");
+void FileEditorView::hexEditorView(const ImVec2& pos, const float hexEditorWidth, const float editorHeight) {
+    ImGui::SetCursorPos(pos);
+    ImGui::BeginChild("Hex Editor", ImVec2(hexEditorWidth, editorHeight), ImGuiChildFlags_Borders);
+    ImGui::Text("Hex:");
     ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
     ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0, 0, 0, 0));
     ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(0, 0, 0, 0));
@@ -41,10 +51,10 @@ void FileEditorView::hexEditorView(const ImVec2&, const float hexWidth, const fl
     ImGui::EndChild();
 }
 
-void FileEditorView::charEditorView(const ImVec2&, const float firstX, const float width, const float height) {
-    ImGui::SetCursorPos(ImVec2(firstX, 0.0f));
-    ImGui::BeginChild("Char Editor", ImVec2(width, height), ImGuiChildFlags_Borders);
-    ImGui::Text("Char EDIT!");
+void FileEditorView::charEditorView(const ImVec2& pos, const float hexEditorWidth, const float charEditorWidth, const float editorHeight) {
+    ImGui::SetCursorPos(pos);
+    ImGui::BeginChild("Char Editor", ImVec2(charEditorWidth, editorHeight), ImGuiChildFlags_Borders);
+    ImGui::Text("Char:");
     ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
     ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0, 0, 0, 0));
     ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(0, 0, 0, 0));
@@ -57,3 +67,13 @@ void FileEditorView::charEditorView(const ImVec2&, const float firstX, const flo
     ImGui::PopStyleColor(3);
     ImGui::EndChild();
 } 
+
+void FileEditorView::FooterView(const ImVec2& pos, const float footerHeight, const float hexEditorWidth, const float charEditorWidth) {
+    ImGui::SetCursorPos(pos);
+    const float footerWidth = ImGui::GetWindowWidth();
+    ImGui::BeginChild("Footer", ImVec2(footerWidth, footerHeight), ImGuiChildFlags_Borders);
+    
+    ImGui::Text(std::format("offset 0x").c_str());
+
+    ImGui::EndChild();
+}

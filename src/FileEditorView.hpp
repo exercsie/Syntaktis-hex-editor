@@ -14,6 +14,7 @@ public:
     void FileMainView(ImVec2& displaySize);
     void hexEditorView(const ImVec2&, const float hexWidth, const float height);
     void charEditorView(const ImVec2&, const float firstX, const float width, const float height);
+    void FooterView(const ImVec2&, const float, const float, const float);
 
     struct DynamicInputData {
         std::string chars;
