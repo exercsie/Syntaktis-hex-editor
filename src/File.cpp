@@ -26,7 +26,7 @@ std::expected<std::string, std::string> File::createTextFile() {
 
     std::ofstream createdTextFile(fullPath);
     if(!createdTextFile.is_open()) {
-        return std::unexpected(std::format("Failed to open {}", fileName.string()));
+        return std::unexpected(std::format("Failed to open {}!", fileName.string()));
     }
     
     // clear previous values after creating new textfile
@@ -40,14 +40,14 @@ std::expected<std::string, std::string> File::createTextFile() {
 std::expected<std::string, std::string> File::openFile() {
     std::ifstream file(ofd.openedFilePath, std::ios::binary);
     if(!file.is_open()) {
-        return std::unexpected(std::format("Failed to open {}", ofd.openedFilePath));
+        return std::unexpected(std::format("Failed to open {}!", ofd.openedFilePath));
     }
     
     // read data until the end of the file and assign to std::string fileContents
     ofd.fileContents.assign(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>()); //https://www.tutorialspoint.com/cpp_standard_library/cpp_iterator_istreambuf_iterator.htm
 
     if(file.bad()) {
-        return std::unexpected(std::format("Failed to read {}", ofd.openedFilePath));
+        return std::unexpected(std::format("Failed to read {}!", ofd.openedFilePath));
     }
 
     InputData.chars = ofd.fileContents;
@@ -76,13 +76,37 @@ std::expected<std::string, std::string> File::saveFile() {
 
     std::ofstream file(ofd.openedFilePath, std::ios::binary | std::ios::trunc);
     if(!file.is_open()) {
-        return std::unexpected(std::format("Failed to save {}", ofd.openedFilePath));
+        return std::unexpected(std::format("Failed to save {}!", ofd.openedFilePath));
     }
 
     file.write(ofd.fileContents.data(), static_cast<std::streamsize>(ofd.fileContents.size()));
     if(!file) {
-        return std::unexpected(std::format("Faile to write to {}", ofd.openedFilePath));
+        return std::unexpected(std::format("Faile to write to {}!", ofd.openedFilePath));
     }
 
     return std::format("File saved successfully at {}", ofd.openedFilePath);
+}
+
+std::expected<void, std::string> File::saveFileAs() {
+    if(ofd.openedFilePath.empty()) {
+        return std::unexpected("There is no file to save!");
+    }
+
+    const std::string path = pfd::save_file("Save File As", cfd.syntaktisHexEditorDirectory.string(), { "Text Files", "*.txt", "All Files", "*" }).result();
+
+    // if user clicks cancel just return
+    if(path.empty()) {
+        return {};
+    }
+
+    ofd.openedFilePath = path;
+
+    const auto r = saveFile();
+    if(r) {
+        std::cout << *r << std::endl;
+    } else {
+        std::cout << r.error() << std::endl;
+    }
+
+    return {};
 }

@@ -21,11 +21,18 @@ void Gui::MenuBarView(GLFWwindow* win, ImVec2& displaySize) {
 
             ImGui::Separator();
 
-            if(ImGui::MenuItem("Save File")) {
+            if(ImGui::MenuItem("Save")) {
                 const auto r = f.saveFile();
                 if(r) {
                     std::cout << *r << std::endl;
                 } else {
+                    std::cout << r.error() << std::endl;
+                }
+            }
+
+            if(ImGui::MenuItem("Save As...")) {
+                const auto r = f.saveFileAs();
+                if(!r) {
                     std::cout << r.error() << std::endl;
                 }
             }

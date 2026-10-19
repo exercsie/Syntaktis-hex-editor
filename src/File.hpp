@@ -18,7 +18,8 @@ public:
     std::expected<std::string, std::string> openFile();
     void openFileSelector();
     std::expected<std::string, std::string> saveFile();
-    
+    std::expected<void, std::string> saveFileAs();
+
     // Data
     struct OpenedFileData {
         std::string openedFilePath;
