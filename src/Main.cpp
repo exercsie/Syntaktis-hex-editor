@@ -4,13 +4,17 @@
 #include "../Assets/Fonts/NotoSans.hpp"
 #include "Gui.hpp"
 #include "FileEditorView.hpp"
+#include "DynamicInputData.hpp"
 
 #include <GLFW/glfw3.h>         // gl apis
 
 int main() {
-    File f;
+    DynamicInputData inputData;
+
+    File f(inputData);
     Gui g(f);
-    FileEditorView fev(f);
+    FileEditorView fev(f, inputData);
+
     glfwInit();
 
     // Start maximised 

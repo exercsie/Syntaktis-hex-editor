@@ -1,5 +1,5 @@
-#include "ByteLogic.hpp"
 #include "../Dependencies/cppcodec/cppcodec/hex_upper.hpp"
+#include "ByteLogic.hpp"
 
 #include <cctype>           // std::isxdigit, std::toupper
 #include <cstdint>          // std::uint8_t

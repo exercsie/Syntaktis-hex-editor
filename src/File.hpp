@@ -1,12 +1,17 @@
 #pragma once
 
+#include "FileEditorView.hpp"
+
 #include <cstdlib>              // std::getenv
 #include <expected>             // std::expected, std::unexpected
 #include <filesystem>           // std::filesystem
 #include <string>               // std::string
 
+
 class File {
 public:
+    explicit File(DynamicInputData& DynamicInputData) : InputData(DynamicInputData) {}
+
     // Menu options
     std::expected<std::string, std::string> createTextFile();
     std::expected<std::string, std::string> openFile();
@@ -25,4 +30,6 @@ public:
     
     OpenedFileData ofd;
     CreateFileData cfd;
+private:
+    DynamicInputData& InputData;
 };

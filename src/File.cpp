@@ -27,6 +27,10 @@ std::expected<std::string, std::string> File::createTextFile() {
         return std::unexpected(std::format("Failed to open {}", fileName.string()));
     }
     
+    // clear previous values after creating new textfile
+    InputData.chars.clear();
+    InputData.hex.clear();
+    ofd.fileContents.clear();
     ofd.openedFilePath = fullPath.string();
     return std::format("Created {}", fileName.string());
 }
@@ -40,6 +44,11 @@ std::expected<std::string, std::string> File::openFile() {
     if(!ofd.fileContents.empty()) {
         std::cout << "recevied vals\n";
     }
+
+    // clear after opening new file 
+    InputData.chars.clear();
+    InputData.hex.clear();
+    ofd.fileContents.clear();
 
     return std::format("Opening path {}", ofd.openedFilePath);
 }

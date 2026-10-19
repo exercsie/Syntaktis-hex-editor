@@ -1,13 +1,15 @@
 #pragma once
 
-#include "Gui.hpp"
+#include "../Dependencies/imgui/imgui.h"
+#include "DynamicInputData.hpp"
 #include "ByteLogic.hpp"
+
+class File;
 
 class FileEditorView {
 public:
     // Constructor / Destructor
-    explicit FileEditorView();
-    explicit FileEditorView(File& file) : f(file) {}
+    explicit FileEditorView(File& file, DynamicInputData& DynamicInputData) : f(file), InputData(DynamicInputData) {}
     ~FileEditorView() = default;
 
     // Views
@@ -15,14 +17,8 @@ public:
     void hexEditorView(const ImVec2&, const float hexWidth, const float height);
     void charEditorView(const ImVec2&, const float firstX, const float width, const float height);
     void FooterView(const ImVec2&, const float, const float, const float);
-
-    struct DynamicInputData {
-        std::string chars;
-        std::string hex;
-    };
-
-    DynamicInputData InputData;
 private:
     File& f;
+    DynamicInputData& InputData;
     Conversion c;
 };

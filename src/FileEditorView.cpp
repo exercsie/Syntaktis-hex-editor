@@ -1,7 +1,6 @@
-#include "FileEditorView.hpp"
 #include "../Dependencies/imgui/imgui.h"
 #include "../Dependencies/imgui/misc/cpp/imgui_stdlib.h"
-#include "Gui.hpp"
+#include "FileEditorView.hpp"
 #include "File.hpp"
 
 #include <format>           // std::format
