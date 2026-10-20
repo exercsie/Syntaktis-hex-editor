@@ -58,7 +58,7 @@ void Gui::MenuBarView(GLFWwindow* win, ImVec2& displaySize) {
         ImGui::EndMainMenuBar();
     }
 
-    displayCreateTextFilePopup();
+    displayCreateTextFilePopup(win);
     displayUnsavedChangesPopup(win);
 }
 
@@ -83,7 +83,7 @@ void Gui::InitialScreenView(ImVec2& displaySize, GLFWwindow* win) {
     ImGui::End();
 }
 
-void Gui::displayCreateTextFilePopup() {
+void Gui::displayCreateTextFilePopup(GLFWwindow* win) {
     if(openCreateTextFilePopup) {
         ImGui::OpenPopup("Enter textfile name");
         openCreateTextFilePopup = false;
@@ -93,19 +93,11 @@ void Gui::displayCreateTextFilePopup() {
         const bool enter = ImGui::InputText("##", f.cfd.createTextFileName, sizeof(f.cfd.createTextFileName), ImGuiInputTextFlags_EnterReturnsTrue);
 
         if(ImGui::Button("Ok") || enter) {
-            const auto r = f.createTextFile();
-            if(r) {
-                f.cfd.createTextFileName[0] = '\0'; // reset stale val
-                std::cout << *r << std::endl;
+            if(f.isThereUnsavedChanges()) {
+                f.unsavedChangesPopup = true;
+                createAfterPopup = true;
             } else {
-                std::cout << r.error() << std::endl;
-            }
-
-            const auto of = f.openFile();
-            if(of) {
-                std::cout << *of << std::endl;
-            } else {
-                std::cout << of.error() << std::endl;
+                createAndOpenTextFile();
             }
             
             ImGui::CloseCurrentPopup();
@@ -118,6 +110,23 @@ void Gui::displayCreateTextFilePopup() {
         }
 
         ImGui::EndPopup();
+    }
+}
+
+void Gui::createAndOpenTextFile() {
+    const auto r = f.createTextFile();
+    f.cfd.createTextFileName[0] = '\0'; // reset stale val
+    if(r) {
+        std::cout << *r << std::endl;
+    } else {
+        std::cout << r.error() << std::endl;
+    }
+
+    const auto of = f.openFile();
+    if(of) {
+        std::cout << *of << std::endl;
+    } else {
+        std::cout << of.error() << std::endl;
     }
 }
 
@@ -138,13 +147,16 @@ void Gui::displayUnsavedChangesPopup(GLFWwindow* win) {
                 // Quit and save changes
                 if(quitAfterPopup) {
                     glfwSetWindowShouldClose(win, quitAfterPopup);
-                }
-
-                f.ofd.openedFilePath = f.tempFilePath;
-
-                const auto opened = f.openFile();
-                if(!opened) {
-                    std::cout << opened.error() << std::endl;
+                } else if(createAfterPopup) {
+                    createAndOpenTextFile();
+                    createAfterPopup = false;
+                } else {
+                    f.ofd.openedFilePath = f.tempFilePath;
+    
+                    const auto opened = f.openFile();
+                    if(!opened) {
+                        std::cout << opened.error() << std::endl;
+                    }
                 }
             } else {
                 std::cout << r.error() << std::endl;
@@ -160,11 +172,15 @@ void Gui::displayUnsavedChangesPopup(GLFWwindow* win) {
 
             if(quitAfterPopup) {
                 glfwSetWindowShouldClose(win, quitAfterPopup);
-            }
-
-            const auto r = f.openFile();
-            if(!r) {
-                std::cout << r.error() << std::endl;
+            } else if(createAfterPopup) {
+                createAndOpenTextFile();
+                createAfterPopup = false;
+            } else {
+                f.ofd.openedFilePath = f.tempFilePath;
+                const auto r = f.openFile();
+                if(!r) {
+                    std::cout << r.error() << std::endl;
+                }
             }
 
             ImGui::CloseCurrentPopup();
@@ -174,6 +190,8 @@ void Gui::displayUnsavedChangesPopup(GLFWwindow* win) {
 
         if(buttonColour("Cancel", ImVec4(0.5f, 0.5f, 0.5f, 0.5f))) {
             quitAfterPopup = false;
+            createAfterPopup = false;
+            f.cfd.createTextFileName[0] = '\0';
             f.tempFilePath.clear();
             ImGui::CloseCurrentPopup();
         }

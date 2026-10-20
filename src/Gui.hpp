@@ -18,12 +18,14 @@ public:
     void InitialScreenView(ImVec2& displaySize, GLFWwindow* win);
 
     // General UI
-    void displayCreateTextFilePopup();
+    void displayCreateTextFilePopup(GLFWwindow* win);
     void displayUnsavedChangesPopup(GLFWwindow* win);
     [[nodiscard]] bool buttonColour(const char* name, ImVec4 v, ImVec2 size = ImVec2(100, 0));
     [[nodiscard]] ImFont* staticFontLoader(std::uint8_t* fontData, const std::uint32_t fontLength, float size = 20.0f);
 private:
     bool openCreateTextFilePopup = false;
     bool quitAfterPopup = false;
+    bool createAfterPopup = false;
+    void createAndOpenTextFile();
     File& f;
 };
