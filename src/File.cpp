@@ -4,6 +4,7 @@
 #include "../Dependencies/portable-file-dialogs/portable-file-dialogs.h"
 #include "File.hpp"
 #include "ByteLogic.hpp"
+#include "ErrorHandling.hpp"
 
 #include <filesystem>           // std::filesystem
 #include <format>               // std::format
@@ -69,11 +70,7 @@ void File::openFileSelector() {
 
         ofd.openedFilePath = chooseFile[0];
         const auto r = openFile();
-        if(r) {
-            std::cout << *r << std::endl;
-        } else {
-            std::cout << r.error() << std::endl;
-        }
+        ErrorHandling::templateErrorHandling(r);
     }
 }
 
@@ -113,11 +110,6 @@ std::expected<void, std::string> File::saveFileAs() {
     ofd.openedFilePath = path;
 
     const auto r = saveFile();
-    if(r) {
-        std::cout << *r << std::endl;
-    } else {
-        std::cout << r.error() << std::endl;
-    }
-
+    ErrorHandling::templateErrorHandling(r);
     return {};
 }

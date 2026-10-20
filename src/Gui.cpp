@@ -1,5 +1,6 @@
 #include "../Dependencies/imgui/imgui.h"
 #include "Gui.hpp"
+#include "ErrorHandling.hpp"
 
 #include <format>               // std::format
 #include <GLFW/glfw3.h>         // gl apis
@@ -23,18 +24,12 @@ void Gui::MenuBarView(GLFWwindow* win, ImVec2& displaySize) {
 
             if(ImGui::MenuItem("Save")) {
                 const auto r = f.saveFile();
-                if(r) {
-                    std::cout << *r << std::endl;
-                } else {
-                    std::cout << r.error() << std::endl;
-                }
+                ErrorHandling::templateErrorHandling(r);
             }
 
             if(ImGui::MenuItem("Save As...")) {
                 const auto r = f.saveFileAs();
-                if(!r) {
-                    std::cout << r.error() << std::endl;
-                }
+                ErrorHandling::templateErrorHandling(r);
             }
 
             ImGui::Separator();
@@ -58,7 +53,7 @@ void Gui::MenuBarView(GLFWwindow* win, ImVec2& displaySize) {
         ImGui::EndMainMenuBar();
     }
 
-    displayCreateTextFilePopup(win);
+    displayCreateTextFilePopup();
     displayUnsavedChangesPopup(win);
 }
 
@@ -83,7 +78,7 @@ void Gui::InitialScreenView(ImVec2& displaySize, GLFWwindow* win) {
     ImGui::End();
 }
 
-void Gui::displayCreateTextFilePopup(GLFWwindow* win) {
+void Gui::displayCreateTextFilePopup() {
     if(openCreateTextFilePopup) {
         ImGui::OpenPopup("Enter textfile name");
         openCreateTextFilePopup = false;
@@ -116,18 +111,10 @@ void Gui::displayCreateTextFilePopup(GLFWwindow* win) {
 void Gui::createAndOpenTextFile() {
     const auto r = f.createTextFile();
     f.cfd.createTextFileName[0] = '\0'; // reset stale val
-    if(r) {
-        std::cout << *r << std::endl;
-    } else {
-        std::cout << r.error() << std::endl;
-    }
+    ErrorHandling::templateErrorHandling(r);
 
     const auto of = f.openFile();
-    if(of) {
-        std::cout << *of << std::endl;
-    } else {
-        std::cout << of.error() << std::endl;
-    }
+    ErrorHandling::templateErrorHandling(of);
 }
 
 void Gui::displayUnsavedChangesPopup(GLFWwindow* win) {
@@ -141,9 +128,7 @@ void Gui::displayUnsavedChangesPopup(GLFWwindow* win) {
 
         if(buttonColour("Save", ImVec4(0.0f, 1.0f, 0.0f, 0.5f))) {
             const auto r = f.saveFile();
-            if(r) {
-                std::cout << *r << std::endl;
-
+            if(ErrorHandling::templateErrorHandling(r)) {
                 // Quit and save changes
                 if(quitAfterPopup) {
                     glfwSetWindowShouldClose(win, quitAfterPopup);
@@ -154,12 +139,8 @@ void Gui::displayUnsavedChangesPopup(GLFWwindow* win) {
                     f.ofd.openedFilePath = f.tempFilePath;
     
                     const auto opened = f.openFile();
-                    if(!opened) {
-                        std::cout << opened.error() << std::endl;
-                    }
+                    ErrorHandling::templateErrorHandling(opened);
                 }
-            } else {
-                std::cout << r.error() << std::endl;
             }
 
             ImGui::CloseCurrentPopup();
@@ -178,9 +159,7 @@ void Gui::displayUnsavedChangesPopup(GLFWwindow* win) {
             } else {
                 f.ofd.openedFilePath = f.tempFilePath;
                 const auto r = f.openFile();
-                if(!r) {
-                    std::cout << r.error() << std::endl;
-                }
+                ErrorHandling::templateErrorHandling(r);
             }
 
             ImGui::CloseCurrentPopup();
