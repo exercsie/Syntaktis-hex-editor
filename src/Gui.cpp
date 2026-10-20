@@ -1,4 +1,7 @@
 #include "../Dependencies/imgui/imgui.h"
+#include "../Assets/Images/SyntaktisHexEditor.hpp"
+#define STB_IMAGE_IMPLEMENTATION
+#include "../Dependencies/stb_image.h"
 #include "Gui.hpp"
 #include "ErrorHandling.hpp"
 
@@ -9,6 +12,14 @@
 
 void Gui::MenuBarView(GLFWwindow* win, ImVec2& displaySize) {
     if(ImGui::BeginMainMenuBar()) {
+        if(const auto& logo = getImage()) {
+            const float h = ImGui::GetFrameHeight();
+            const float w = h * (logo->details.width / logo->details.height);
+
+            ImGui::Image(static_cast<ImTextureID>(logo->id), ImVec2(w, h));
+            ImGui::SameLine();
+        }
+
         if(ImGui::BeginMenu("File")) {
             if(ImGui::MenuItem("New Text File")) {
                 openCreateTextFilePopup = true;
@@ -62,6 +73,14 @@ void Gui::InitialScreenView(ImVec2& displaySize, GLFWwindow* win) {
     ImGui::SetNextWindowSize(ImVec2(displaySize.x, displaySize.y), ImGuiCond_Always);
     ImGui::Begin("Starter Screen", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
 
+    if(const auto& logo = getImage()) {
+        const float h = 128.0f;
+        const float w = h * (logo->details.width / logo->details.height);
+        
+        ImGui::SetCursorPos(ImVec2(displaySize.x * 0.5f - w * 0.5f, displaySize.y * 0.5f - 100.0f - h - 20.0f));
+        ImGui::Image(static_cast<ImTextureID>(logo->id), ImVec2(w, h));
+    }
+    
     ImGui::SetCursorPos(ImVec2(displaySize.x * 0.5f - 225.0f, displaySize.y * 0.5f - 100.0f));
     ImGui::Text("Welcome to Syntaktis Hex Editor. Create a new text\nfile or open an existing one to start editing!");
 
@@ -188,10 +207,52 @@ bool Gui::buttonColour(const char* name, ImVec4 v, ImVec2 size) {
     return isButtonPressed;
 }
 
+std::optional<std::uint32_t> Gui::imageLoader(const std::uint8_t* bytes, int length, ImageDetails& details) {
+    int w{}, h{};
+    std::uint8_t* data = stbi_load_from_memory(bytes, length, &w, &h, nullptr, 4);
+
+    std::uint32_t textureID{};
+    glGenTextures(1, &textureID);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    stbi_image_free(data);
+
+    details.width = static_cast<float>(w);
+    details.height = static_cast<float>(h);
+    return textureID;
+}
+
 ImFont* Gui::staticFontLoader(std::uint8_t* fontData, const std::uint32_t fontLength, float size) {
     ImGuiIO& io = ImGui::GetIO();
     
     ImFontConfig cfg;
     cfg.FontDataOwnedByAtlas = false;
     return io.Fonts->AddFontFromMemoryTTF(fontData, fontLength, size, &cfg);
+}
+
+void Gui::loadImage() {
+    const std::optional<std::uint32_t> texture = imageLoader(SyntaktisHexEditor_png, SyntaktisHexEditor_png_len, imageDetails);
+    if(texture) {
+        textureID = *texture;
+    }
+}
+
+const std::optional<Gui::LoadedImage>& Gui::getImage() {
+    static std::optional<LoadedImage> logo;
+    static bool tried = false;
+
+    if(!tried) {
+        tried = true;
+        Gui::ImageDetails d;
+
+        if(const auto id = imageLoader(SyntaktisHexEditor_png, SyntaktisHexEditor_png_len, d)) {
+            logo = LoadedImage{*id, d};
+        }
+    }
+
+    return logo;
 }
