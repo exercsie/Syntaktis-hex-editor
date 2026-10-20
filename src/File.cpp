@@ -61,7 +61,7 @@ void File::openFileSelector() {
     std::vector<std::string> chooseFile = pfd::open_file("Open File", cfd.syntaktisHexEditorDirectory.string(), {"Text Files", "*.txt", "All Files", "*" }).result();
 
     if(!chooseFile.empty()) {
-        if(ofd.fileContents != ofd.originalContents) {
+        if(isThereUnsavedChanges()) {
             tempFilePath = chooseFile[0];
             unsavedChangesPopup = true;
             return;
@@ -92,6 +92,7 @@ std::expected<std::string, std::string> File::saveFile() {
         return std::unexpected(std::format("Faile to write to {}!", ofd.openedFilePath));
     }
 
+    // Update original contents to remove invokation of unsaved changes
     ofd.originalContents = ofd.fileContents;
 
     return std::format("File saved successfully at {}", ofd.openedFilePath);

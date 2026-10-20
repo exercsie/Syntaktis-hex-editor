@@ -20,6 +20,9 @@ public:
     std::expected<std::string, std::string> saveFile();
     std::expected<void, std::string> saveFileAs();
 
+    // Checkers
+    [[nodiscard]] bool isThereUnsavedChanges() const noexcept { return ofd.fileContents != ofd.originalContents; }
+
     // Data
     struct OpenedFileData {
         std::string openedFilePath;
