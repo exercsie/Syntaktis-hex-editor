@@ -25,12 +25,14 @@ namespace ErrorHandling {
     template<typename T, typename Y>
     bool templateErrorHandling(const std::expected<T, Y>& result) {
         if(!result) {
-            lg.logs.push_back({ result.error(), true });
+            std::string errorMessage = std::format("[ERROR]: {}", result.error());
+            lg.logs.push_back({ errorMessage, true });
             return false;
         }
     
         if constexpr (!std::is_void_v<T>) {
-            lg.logs.push_back({ *result, false });
+            std::string successMessage = std::format("[SUCCESS]: {}", *result);
+            lg.logs.push_back({ successMessage, false });
         }
     
         return true;

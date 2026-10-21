@@ -27,7 +27,7 @@ public:
 
     // Views
     void MenuBarView(GLFWwindow*, ImVec2&);
-    bool InitialScreenView(ImVec2& displaySize, GLFWwindow* win);
+    void InitialScreenView(ImVec2& displaySize, GLFWwindow* win);
     void LogView(ImVec2& displaySize);
 
     // ** General UI **

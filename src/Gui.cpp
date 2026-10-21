@@ -23,7 +23,6 @@ void Gui::MenuBarView(GLFWwindow* win, ImVec2& displaySize) {
         if(ImGui::BeginMenu("File")) {
             if(ImGui::MenuItem("New Text File")) {
                 openCreateTextFilePopup = true;
-                destroyInitialScreenView = true;
             }
 
             ImGui::Separator();
@@ -79,7 +78,7 @@ void Gui::MenuBarView(GLFWwindow* win, ImVec2& displaySize) {
     displayUnsavedChangesPopup(win);
 }
 
-bool Gui::InitialScreenView(ImVec2& displaySize, GLFWwindow* win) {
+void Gui::InitialScreenView(ImVec2& displaySize, GLFWwindow* win) {
     ImGui::SetNextWindowPos(ImVec2(0.0f, 30.0f), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(displaySize.x, displaySize.y), ImGuiCond_Always);
     ImGui::Begin("Starter Screen", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus);
@@ -97,20 +96,16 @@ bool Gui::InitialScreenView(ImVec2& displaySize, GLFWwindow* win) {
 
     ImGui::SetCursorPos(ImVec2(displaySize.x * 0.5f - 225.0f, displaySize.y * 0.5f - 25.0f));
     if(buttonColour("New Text File", ImVec4(0.0f, 0.502f, 0.502f, 1.0f), ImVec2(200, 50))) {
-        ImGui::End();
         openCreateTextFilePopup = true;
-        return true;
     }
 
     ImGui::SetCursorPos(ImVec2(displaySize.x * 0.5f + 25.0f, displaySize.y * 0.5f - 25.0f));
     if(buttonColour("Open Text File", ImVec4(0.0f, 0.502f, 0.502f, 1.0f), ImVec2(200, 50))) {
         f.openFileSelector();
-        ImGui::End();
-        return true;
+        destroyInitialScreenView = true;
     }
 
     ImGui::End();
-    return false;
 }
 
 void Gui::LogView(ImVec2& displaySize) {
@@ -151,6 +146,7 @@ void Gui::displayCreateTextFilePopup() {
                 f.unsavedChangesPopup = true;
                 createAfterPopup = true;
             } else {
+                destroyInitialScreenView = true;
                 createAndOpenTextFile();
             }
             
@@ -209,6 +205,7 @@ void Gui::displayUnsavedChangesPopup(GLFWwindow* win) {
 
         if(buttonColour("Don't save", ImVec4(1.0f, 0.0f, 0.0f, 0.5f))) {
             f.ofd.openedFilePath = f.tempFilePath;
+            ErrorHandling::lg.logs.push_back({ std::format("[SUCCESS]: User chose not the save file in the open file state for {}", f.ofd.openedFilePath), false });
 
             if(quitAfterPopup) {
                 glfwSetWindowShouldClose(win, quitAfterPopup);
@@ -227,6 +224,7 @@ void Gui::displayUnsavedChangesPopup(GLFWwindow* win) {
         ImGui::SameLine();
 
         if(buttonColour("Cancel", ImVec4(0.5f, 0.5f, 0.5f, 0.5f))) {
+            ErrorHandling::lg.logs.push_back({ std::format("[SUCCESS]: User chose to cancel the unsaved changes in the open file state for {}", f.ofd.openedFilePath), false });
             quitAfterPopup = false;
             createAfterPopup = false;
             f.cfd.createTextFileName[0] = '\0';
