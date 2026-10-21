@@ -4,8 +4,9 @@
 #include "File.hpp"
 
 #include <cstdint>              // std::uint8_t, std::uint32_t
+#include <GLFW/glfw3.h>         // gl apis
 #include <optional>             // std::optional
-#include <GLFW/glfw3.h>     
+#include <string>               // std::string
 
 class Gui {
 public:

@@ -9,7 +9,6 @@
 #include <filesystem>           // std::filesystem
 #include <format>               // std::format
 #include <fstream>              // std::ofstream
-#include <iostream>             // std::cout, std::endl
 #include <iterator>             // std::istreambuf_iterator
 #include <string>               // std::string
 #include <vector>               // std::vector

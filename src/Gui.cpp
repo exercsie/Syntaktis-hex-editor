@@ -121,6 +121,19 @@ void Gui::LogView(ImVec2& displaySize) {
     ImGui::SetNextWindowPos(ImVec2(displaySize.x, 0.0f), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(200.0f, 500.0f), ImGuiCond_FirstUseEver);
     ImGui::Begin("Logs", &showLogs);
+
+    for(const auto& it : ErrorHandling::lg.logs) {
+        if(it.isError) {
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+            ImGui::Text(std::format("{}", it.msg).c_str());
+            ImGui::PopStyleColor();
+        } else {
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 1.0f, 0.0f, 1.0f));
+            ImGui::Text(std::format("{}", it.msg).c_str());
+            ImGui::PopStyleColor();
+        }
+    }
+
     ImGui::End();
 }
 
