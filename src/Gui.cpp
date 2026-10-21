@@ -4,6 +4,7 @@
 #include "../Dependencies/stb_image.h"
 #include "Gui.hpp"
 #include "ErrorHandling.hpp"
+#include "DynamicInputData.hpp"
 
 #include <format>               // std::format
 #include <GLFW/glfw3.h>         // gl apis
@@ -59,9 +60,11 @@ void Gui::MenuBarView(GLFWwindow* win, ImVec2& displaySize) {
         }
 
         if(ImGui::BeginMenu("View")) {
-            if(ImGui::MenuItem("Logs")) {
-                showLogs = true;
-            }
+            if(ImGui::Checkbox("Show Logs", &tc.showLogs));
+
+            if(ImGui::Checkbox("Show FPS", &tc.showFPS));
+
+            if(ImGui::Checkbox("Show offset", &tc.showOffset));
             
             ImGui::EndMenu();
         }
@@ -109,13 +112,13 @@ void Gui::InitialScreenView(ImVec2& displaySize, GLFWwindow* win) {
 }
 
 void Gui::LogView(ImVec2& displaySize) {
-    if(!showLogs) {
+    if(!tc.showLogs) {
         return;
     }
 
     ImGui::SetNextWindowPos(ImVec2(displaySize.x, 0.0f), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(200.0f, 500.0f), ImGuiCond_FirstUseEver);
-    ImGui::Begin("Logs", &showLogs);
+    ImGui::Begin("Logs", &tc.showLogs);
 
     for(const auto& it : ErrorHandling::lg.logs) {
         if(it.isError) {
@@ -236,7 +239,7 @@ void Gui::displayUnsavedChangesPopup(GLFWwindow* win) {
     }
 }
 
-bool Gui::buttonColour(const char* name, ImVec4 v, ImVec2 size) {
+bool Gui::buttonColour(const char* name, ImVec4 v, ImVec2 size) noexcept {
     ImGui::PushStyleColor(ImGuiCol_Button, v);
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(v.x + 0.1f, v.y + 0.1f, v.z + 0.1f, 1.0f));
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(v.x - 0.1f, v.y - 0.1f, v.z - 0.1f, 1.0f));
@@ -272,7 +275,7 @@ ImFont* Gui::staticFontLoader(std::uint8_t* fontData, const std::uint32_t fontLe
     return io.Fonts->AddFontFromMemoryTTF(fontData, fontLength, size, &cfg);
 }
 
-void Gui::loadImage() {
+void Gui::loadImage() noexcept {
     const std::optional<std::uint32_t> texture = imageLoader(SyntaktisHexEditor_png, SyntaktisHexEditor_png_len, imageDetails);
     if(texture) {
         textureID = *texture;

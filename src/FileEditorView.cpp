@@ -74,8 +74,15 @@ void FileEditorView::FooterView(const ImVec2& pos, const float footerHeight, con
     const float footerWidth = ImGui::GetWindowWidth();
     ImGui::BeginChild("Footer", ImVec2(footerWidth, footerHeight), ImGuiChildFlags_Borders);
 
-    std::size_t offset = InputData.chars.size();
-    ImGui::Text(std::format("Offset: 0x{:X}", offset).c_str()); // https://www.modernescpp.com/index.php/std-format-in-c-20/
+    if(tc.showOffset) {
+        std::size_t offset = InputData.chars.size();
+        ImGui::Text(std::format("Offset: 0x{:X}", offset).c_str()); // https://www.modernescpp.com/index.php/std-format-in-c-20/
+    }
+    
+    if(tc.showFPS) {
+        ImGui::SameLine(footerWidth - 110.0f);
+        ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
+    }
 
     ImGui::EndChild();
 }

@@ -14,11 +14,11 @@ public:
     ~File() = default;
 
     // Menu options
-    std::expected<std::string, std::string> createTextFile();
-    std::expected<std::string, std::string> openFile();
-    void openFileSelector();
-    std::expected<std::string, std::string> saveFile();
-    std::expected<void, std::string> saveFileAs();
+    std::expected<std::string, std::string> createTextFile() noexcept;
+    std::expected<std::string, std::string> openFile() noexcept;
+    void openFileSelector() noexcept;
+    std::expected<std::string, std::string> saveFile() noexcept;
+    std::expected<void, std::string> saveFileAs() noexcept;
 
     // Checkers
     [[nodiscard]] bool isThereUnsavedChanges() const noexcept { return ofd.fileContents != ofd.originalContents; }

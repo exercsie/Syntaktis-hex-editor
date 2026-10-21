@@ -10,10 +10,11 @@
 
 int main() {
     DynamicInputData inputData;
+    ToggleCheckboxes tc;
 
     File f(inputData);
-    Gui g(f);
-    FileEditorView fev(f, inputData);
+    Gui g(f, tc);
+    FileEditorView fev(f, inputData, tc);
 
     glfwInit();
 
@@ -57,7 +58,7 @@ int main() {
         g.MenuBarView(window, displaySize);
 
         // After a user opens or creates a file this screen should never be displayed again
-        if(!g.destroyInitialScreenView) {
+        if(!g.destroyInitialScreenView) [[unlikely]] {
             g.InitialScreenView(displaySize, window);
         }
 

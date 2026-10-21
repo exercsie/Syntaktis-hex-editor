@@ -2,6 +2,7 @@
 
 #include "../Dependencies/imgui/imgui.h"
 #include "File.hpp"
+#include "DynamicInputData.hpp"
 
 #include <cstdint>              // std::uint8_t, std::uint32_t
 #include <GLFW/glfw3.h>         // gl apis
@@ -22,7 +23,7 @@ public:
 
     // Constructor / Destructor
     explicit Gui();
-    explicit Gui(File& file) : f(file) {}
+    explicit Gui(File& file, ToggleCheckboxes& checkboxes) : f(file), tc(checkboxes) {}
     ~Gui() = default; 
 
     // Views
@@ -36,12 +37,12 @@ public:
     void displayUnsavedChangesPopup(GLFWwindow* win);
 
     // Other UI
-    [[nodiscard]] bool buttonColour(const char* name, ImVec4 v, ImVec2 size = ImVec2(100, 0));
+    [[nodiscard]] bool buttonColour(const char* name, ImVec4 v, ImVec2 size = ImVec2(100, 0)) noexcept;
     [[nodiscard]] ImFont* staticFontLoader(std::uint8_t* fontData, const std::uint32_t fontLength, float size = 20.0f);
 
     // Images
     [[nodiscard]] static std::optional<std::uint32_t> imageLoader(const std::uint8_t* bytes, int length, ImageDetails& details);
-    void loadImage();
+    void loadImage() noexcept;
     const std::optional<LoadedImage>& getImage();
 
     ImageDetails imageDetails;
@@ -52,7 +53,7 @@ private:
     bool openCreateTextFilePopup = false;
     bool quitAfterPopup = false;
     bool createAfterPopup = false;
-    bool showLogs = false;
     void createAndOpenTextFile();
+    ToggleCheckboxes& tc;
     File& f;
 };

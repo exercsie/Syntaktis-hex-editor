@@ -13,7 +13,7 @@
 #include <string>               // std::string
 #include <vector>               // std::vector
 
-std::expected<std::string, std::string> File::createTextFile() {
+std::expected<std::string, std::string> File::createTextFile() noexcept {
     std::filesystem::create_directories(cfd.syntaktisHexEditorDirectory);
     std::filesystem::path fileName(cfd.createTextFileName);
     fileName = fileName.filename();
@@ -37,7 +37,7 @@ std::expected<std::string, std::string> File::createTextFile() {
     return std::format("Created {}", fileName.string());
 }
 
-std::expected<std::string, std::string> File::openFile() {
+std::expected<std::string, std::string> File::openFile() noexcept {
     std::ifstream file(ofd.openedFilePath, std::ios::binary);
     if(!file.is_open()) {
         return std::unexpected(std::format("Failed to open {}!", ofd.openedFilePath));
@@ -57,7 +57,7 @@ std::expected<std::string, std::string> File::openFile() {
     return std::format("Opened {}", ofd.openedFilePath);
 }
 
-void File::openFileSelector() {
+void File::openFileSelector() noexcept {
     std::vector<std::string> chooseFile = pfd::open_file("Open File", cfd.syntaktisHexEditorDirectory.string(), {"Text Files", "*.txt", "All Files", "*" }).result();
 
     if(!chooseFile.empty()) {
@@ -73,7 +73,7 @@ void File::openFileSelector() {
     }
 }
 
-std::expected<std::string, std::string> File::saveFile() {
+std::expected<std::string, std::string> File::saveFile() noexcept {
     if(ofd.openedFilePath.empty()) {
         return std::unexpected("There is no file to save!");
     }
@@ -94,7 +94,7 @@ std::expected<std::string, std::string> File::saveFile() {
     return std::format("File saved successfully at {}", ofd.openedFilePath);
 }
 
-std::expected<void, std::string> File::saveFileAs() {
+std::expected<void, std::string> File::saveFileAs() noexcept {
     if(ofd.openedFilePath.empty()) {
         return std::unexpected("There is no file to save!");
     }
