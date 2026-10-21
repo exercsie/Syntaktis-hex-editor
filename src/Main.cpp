@@ -55,7 +55,12 @@ int main() {
         const ImGuiViewport* viewPort = ImGui::GetMainViewport();
 
         g.MenuBarView(window, displaySize);
-        g.InitialScreenView(displaySize, window);
+
+        // After a user opens or creates a file this screen should never be displayed again
+        if(!g.destroyInitialScreenView) {
+            g.destroyInitialScreenView = g.InitialScreenView(displaySize, window);
+        }
+
         fev.FileMainView(displaySize);
 
         /*ImGui::SetNextWindowPos(viewPort->WorkPos, ImGuiCond_Always);

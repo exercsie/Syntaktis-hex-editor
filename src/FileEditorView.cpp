@@ -24,7 +24,7 @@ void FileEditorView::FileMainView(ImVec2& displaySize) {
     ImGui::SetNextWindowPos(ImVec2(0.0f, 30.0f), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight), ImGuiCond_Always);
     ImGui::SetNextWindowBgAlpha(1.0f); // Completely cover prior view
-    ImGui::Begin("Edit File", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+    ImGui::Begin("Edit File", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus);
 
     hexEditorView(ImVec2(0.0f, 0.0f), hexEditorWidth, editorHeight);
     charEditorView(ImVec2(hexEditorWidth, 0.0f), hexEditorWidth, charEditorWidth, editorHeight);

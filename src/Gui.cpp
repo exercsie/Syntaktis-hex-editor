@@ -23,12 +23,14 @@ void Gui::MenuBarView(GLFWwindow* win, ImVec2& displaySize) {
         if(ImGui::BeginMenu("File")) {
             if(ImGui::MenuItem("New Text File")) {
                 openCreateTextFilePopup = true;
+                destroyInitialScreenView = true;
             }
 
             ImGui::Separator();
 
             if(ImGui::MenuItem("Open File")) {
                 f.openFileSelector();
+                destroyInitialScreenView = true;
             }
 
             ImGui::Separator();
@@ -57,21 +59,30 @@ void Gui::MenuBarView(GLFWwindow* win, ImVec2& displaySize) {
             ImGui::EndMenu();
         }
 
+        if(ImGui::BeginMenu("View")) {
+            if(ImGui::MenuItem("Logs")) {
+                showLogs = true;
+            }
+            
+            ImGui::EndMenu();
+        }
+        
         // display path ton top bar
         ImGui::SetCursorPosX((displaySize.x / 2) - 300.0f);
         ImGui::Text(std::format("{}", f.ofd.openedFilePath).c_str());
-
+        
         ImGui::EndMainMenuBar();
     }
 
+    LogView(displaySize);
     displayCreateTextFilePopup();
     displayUnsavedChangesPopup(win);
 }
 
-void Gui::InitialScreenView(ImVec2& displaySize, GLFWwindow* win) {
+bool Gui::InitialScreenView(ImVec2& displaySize, GLFWwindow* win) {
     ImGui::SetNextWindowPos(ImVec2(0.0f, 30.0f), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(displaySize.x, displaySize.y), ImGuiCond_Always);
-    ImGui::Begin("Starter Screen", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+    ImGui::Begin("Starter Screen", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus);
 
     if(const auto& logo = getImage()) {
         const float h = 128.0f;
@@ -86,14 +97,30 @@ void Gui::InitialScreenView(ImVec2& displaySize, GLFWwindow* win) {
 
     ImGui::SetCursorPos(ImVec2(displaySize.x * 0.5f - 225.0f, displaySize.y * 0.5f - 25.0f));
     if(buttonColour("New Text File", ImVec4(0.0f, 0.502f, 0.502f, 1.0f), ImVec2(200, 50))) {
+        ImGui::End();
         openCreateTextFilePopup = true;
+        return true;
     }
 
     ImGui::SetCursorPos(ImVec2(displaySize.x * 0.5f + 25.0f, displaySize.y * 0.5f - 25.0f));
     if(buttonColour("Open Text File", ImVec4(0.0f, 0.502f, 0.502f, 1.0f), ImVec2(200, 50))) {
         f.openFileSelector();
+        ImGui::End();
+        return true;
     }
 
+    ImGui::End();
+    return false;
+}
+
+void Gui::LogView(ImVec2& displaySize) {
+    if(!showLogs) {
+        return;
+    }
+
+    ImGui::SetNextWindowPos(ImVec2(displaySize.x, 0.0f), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(200.0f, 500.0f), ImGuiCond_FirstUseEver);
+    ImGui::Begin("Logs", &showLogs);
     ImGui::End();
 }
 
@@ -144,7 +171,7 @@ void Gui::displayUnsavedChangesPopup(GLFWwindow* win) {
 
     if(ImGui::BeginPopupModal("Unsaved Changes", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
         ImGui::Text("The file has not been saved");
-
+        ImGui::Spacing();
         if(buttonColour("Save", ImVec4(0.0f, 1.0f, 0.0f, 0.5f))) {
             const auto r = f.saveFile();
             if(ErrorHandling::templateErrorHandling(r)) {
