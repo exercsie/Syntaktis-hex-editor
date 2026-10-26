@@ -24,7 +24,7 @@ void FileEditorView::FileMainView(ImVec2& displaySize) {
     ImGui::SetNextWindowPos(ImVec2(0.0f, 30.0f), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight), ImGuiCond_Always);
     ImGui::SetNextWindowBgAlpha(1.0f); // Completely cover prior view
-    ImGui::Begin("Edit File", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus);
+    ImGui::Begin("Edit File", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoScrollbar);
 
     hexEditorView(ImVec2(0.0f, 0.0f), hexEditorWidth, editorHeight);
     charEditorView(ImVec2(hexEditorWidth, 0.0f), hexEditorWidth, charEditorWidth, editorHeight);
@@ -72,7 +72,7 @@ void FileEditorView::charEditorView(const ImVec2& pos, const float hexEditorWidt
 void FileEditorView::FooterView(const ImVec2& pos, const float footerHeight, const float hexEditorWidth, const float charEditorWidth) {
     ImGui::SetCursorPos(pos);
     const float footerWidth = ImGui::GetWindowWidth();
-    ImGui::BeginChild("Footer", ImVec2(footerWidth, footerHeight), ImGuiChildFlags_Borders);
+    ImGui::BeginChild("Footer", ImVec2(footerWidth, footerHeight), ImGuiChildFlags_Borders, ImGuiWindowFlags_NoScrollbar);
 
     if(tc.showOffset) {
         std::size_t offset = InputData.chars.size();

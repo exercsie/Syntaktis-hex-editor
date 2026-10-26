@@ -35,6 +35,7 @@ public:
     // Popups
     void displayCreateTextFilePopup();
     void displayUnsavedChangesPopup(GLFWwindow* win);
+    static void displayUnsavedChangesOnDirectProgramClosure(GLFWwindow* w);
 
     // Other UI
     [[nodiscard]] bool buttonColour(const char* name, ImVec4 v, ImVec2 size = ImVec2(100, 0)) noexcept;

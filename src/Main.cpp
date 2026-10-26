@@ -44,6 +44,12 @@ int main() {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 130");
 
+    // Stores the Gui in the window so a callback can be made
+    glfwSetWindowUserPointer(window, &g);
+
+    // Whenever a user closes the current window displayUnsavedChangesOnDirectProgramClosure runs
+    glfwSetWindowCloseCallback(window, Gui::displayUnsavedChangesOnDirectProgramClosure);
+
     while(!glfwWindowShouldClose(window)) {
         glfwPollEvents();
 

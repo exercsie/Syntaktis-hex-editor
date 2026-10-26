@@ -118,7 +118,7 @@ void Gui::LogView(ImVec2& displaySize) {
 
     ImGui::SetNextWindowPos(ImVec2(displaySize.x, 0.0f), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(200.0f, 500.0f), ImGuiCond_FirstUseEver);
-    ImGui::Begin("Logs", &tc.showLogs);
+    ImGui::Begin("Logs", &tc.showLogs, ImGuiWindowFlags_NoFocusOnAppearing);
 
     for(const auto& it : ErrorHandling::lg.logs) {
         if(it.isError) {
@@ -236,6 +236,18 @@ void Gui::displayUnsavedChangesPopup(GLFWwindow* win) {
         }
 
         ImGui::EndPopup();
+    }
+}
+
+void Gui::displayUnsavedChangesOnDirectProgramClosure(GLFWwindow* w) {
+    // Set gui = to the old Gui instance that was stored in main()
+    Gui* gui = static_cast<Gui*>(glfwGetWindowUserPointer(w));
+
+    // Checked when a user closes the window directly
+    if(gui && gui->f.isThereUnsavedChanges()) {
+        glfwSetWindowShouldClose(w, GLFW_FALSE);
+        gui->f.unsavedChangesPopup = true;
+        gui->quitAfterPopup = true;
     }
 }
 
