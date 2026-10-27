@@ -4,7 +4,7 @@
 #include "Gui.hpp"
 
 #include <expected>             // std::expected
-#include <iostream>             // std::cout
+#include <format>               // std::format
 #include <type_traits>          // std::is_void_v
 #include <vector>               // std::vector
 

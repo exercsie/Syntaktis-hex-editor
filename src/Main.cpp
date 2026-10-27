@@ -27,6 +27,9 @@ int main() {
 
     ImGui::CreateContext();
 
+    // Skipped dimming as it caused crashes on window scales > 100%
+    ImGui::GetStyle().Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0, 0, 0, 0);
+
     ImGuiIO& io = ImGui::GetIO();
 
     // Load custom fonts

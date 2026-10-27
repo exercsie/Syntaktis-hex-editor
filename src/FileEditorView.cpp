@@ -11,8 +11,8 @@ void FileEditorView::FileMainView(ImVec2& displaySize) {
     }
 
     // Heights
-    const float menuBarHeight = 30.0f;
-    const float footerHeight = 40.0f;
+    constexpr float menuBarHeight = 30.0f;
+    constexpr float footerHeight = 40.0f;
     const float windowWidth = displaySize.x;
     const float windowHeight = displaySize.y - menuBarHeight;
     const float editorHeight = windowHeight - footerHeight;
